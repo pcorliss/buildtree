@@ -11,8 +11,6 @@ gem 'jbuilder', '~> 2.0'
 gem 'unicorn'
 
 group :development do
-  gem 'guard-rspec'
-  gem 'libnotify'
   gem 'spring'
   gem 'spring-commands-rspec'
 end
