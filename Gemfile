@@ -11,6 +11,8 @@ gem 'unicorn'
 gem 'omniauth', '~> 1.2.1'
 gem 'omniauth-oauth2', '~> 1.1.2'
 gem 'omniauth-github', '~> 1.1.2'
+gem 'octokit', '~> 4.0.1'
+gem 'sshkey', '~> 1.7.0'
 
 gem 'haml', '~> 4.0.6'
 gem 'sass-rails'
@@ -32,6 +34,7 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'pry-rails'
   gem 'rspec-rails'
+  gem 'webmock'
 end
 
 group :production do
