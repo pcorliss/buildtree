@@ -26,7 +26,7 @@ class GitApi
 
     key = SSHKey.generate(
       :bits => ENV['SSH_KEY_SIZE'].to_i,
-      :comment => "GitSentry.com - Generated for #{service}/#{owner}/#{name} - #{Time.now}",
+      :comment => "BuildTree - Generated for #{service}/#{owner}/#{name} - #{Time.now}",
       :passphrase => ENV['SSH_PASSPHRASE']
     )
 
@@ -56,11 +56,7 @@ class GitApi
   end
 
   def github_add_key(owner, name, key)
-    source.add_deploy_key("#{owner}/#{name}", 'GitSentry', key.ssh_public_key)
-  end
-
-  def bitbucket_add_key(owner, name, key)
-    source.repos.keys.create owner, name, :label => 'gitsentry', :key => key.ssh_public_key
+    source.add_deploy_key("#{owner}/#{name}", 'BuildTree', key.ssh_public_key)
   end
 
   def github_repos
@@ -70,17 +66,6 @@ class GitApi
         owner: repo.owner.login,
         name: repo.name,
         private: repo.private
-      )
-    end
-  end
-
-  def bitbucket_repos
-    source.repos.list.map do |repo|
-      Hashie::Mash.new(
-        service: 'bitbucket',
-        owner: repo.owner,
-        name: repo.name,
-        private: repo.is_private
       )
     end
   end

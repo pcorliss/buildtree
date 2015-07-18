@@ -12,7 +12,7 @@ describe GitApi do
   end
 
   describe "#initialize" do
-    it "creates a github connection based on " do
+    it "creates a github connection based on service " do
       api = GitApi.new(github_user)
       expect(api.source).to be_a(Octokit::Client)
       expect(api.service).to eq(:github)
@@ -57,7 +57,7 @@ describe GitApi do
       let(:api) { GitApi.new(github_user) }
 
       it "git client receives a call" do
-        expect_any_instance_of(Octokit::Client).to receive(:add_deploy_key).with('foo/bar', 'GitSentry', pub_key)
+        expect_any_instance_of(Octokit::Client).to receive(:add_deploy_key).with('foo/bar', 'BuildTree', pub_key)
 
         api.add_new_deploy_key('foo', 'bar')
       end
