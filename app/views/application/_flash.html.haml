@@ -1,0 +1,10 @@
+- content_for :flash_display, true
+
+- flash.each do |type, messages|
+  - messages = [messages] unless messages.is_a?(Array)
+  - messages.each do |message|
+    .alert.alert-dismissable{class: "alert-#{type}"}
+      %button.close{type:"button", 'data-dismiss' => "alert"}
+        = fa_icon 'times'
+      %h4.no-vertical-margins
+        = message

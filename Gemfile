@@ -3,12 +3,22 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 4.2.3'
 gem 'pg'
-gem 'sass-rails', '~> 5.0'
-gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
 gem 'jquery-rails'
 gem 'jbuilder', '~> 2.0'
 gem 'unicorn'
+
+gem 'omniauth', '~> 1.2.1'
+gem 'omniauth-oauth2', '~> 1.1.2'
+gem 'omniauth-github', '~> 1.1.2'
+
+gem 'haml', '~> 4.0.6'
+gem 'sass-rails'
+gem 'less-rails'
+gem 'therubyracer'
+gem 'twitter-bootswatch-rails', '~> 3.1.1'
+gem "font-awesome-rails"
+gem 'uglifier', '>= 1.3.0'
 
 group :development do
   gem 'spring'

@@ -1,0 +1,16 @@
+$banner-image: image-path('unsplash_wood_1600.jpg')
+
+.banner
+  background-color: #666
+  background: transparent url($banner-image) 0 0 no-repeat fixed
+  background-size: cover
+  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='#{$banner-image}', sizingMethod='scale')
+  height: 200px
+  width: 100%
+  margin-bottom: 3em
+  display: table
+
+  //Text
+  color: #eee
+  text-shadow: 0 2px 2px #111
+  text-align: center

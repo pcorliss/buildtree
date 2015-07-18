@@ -1,0 +1,19 @@
+.col-md-20.col-sm-24.col-lg-16.col-centered
+  = render 'flash'
+
+  %legend Sign In With
+
+  .row
+    .col-md-18.col-sm-18.col-lg-18
+      = link_to '/auth/github' do
+        %button.btn.btn-primary.full-width{type: 'button'}
+          %h4
+            = fa_icon 'github'
+            GitHub
+
+    -#.col-md-18.col-sm-18.col-lg-18
+      -#= link_to '/auth/bitbucket' do
+        -#%button.btn.btn-primary.full-width{type: 'button'}
+          -#%h4
+            -#= fa_icon 'bitbucket'
+            -#BitBucket
