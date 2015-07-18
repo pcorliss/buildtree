@@ -4,4 +4,6 @@ Rails.application.routes.draw do
     get :signout, action: :destroy
     get ':provider/callback', action: :create, as: :callback
   end
+
+  resource :repo, only: [:new]
 end

@@ -16,22 +16,25 @@ class ApplicationController < ActionController::Base
 
   private
 
-  #def authorized_for_repo?(repo)
-    #user_repos.any? do |user_repo_api_resp|
-      #user_repo = Repo.initialize_by_api(user_repo_api_resp)
-      #repo.name == user_repo.name &&
-      #repo.organization == user_repo.organization &&
-      #repo.service == user_repo.service
-    #end
-  #end
-
-  def require_session
-    redirect_to signin_auth_path unless session[:user_id]
+  def authorized_for_repo?(repo)
+    user_repos.any? do |user_repo_api_resp|
+      user_repo = Repo.initialize_by_api(user_repo_api_resp)
+      repo.name == user_repo.name &&
+      repo.organization == user_repo.organization &&
+      repo.service == user_repo.service
+    end
   end
 
-  #def user_repos
-    #Rails.cache.fetch("user_repos_#{current_user.slug}") do
-      #GitApi.new(current_user).repos
-    #end
-  #end
+  def require_session
+    flash[:error] ||= []
+    flash[:error] << "Please log in"
+    redirect_to signin_auth_path unless logged_in?
+  end
+
+  # TODO expire this cache every 24 hours
+  def user_repos
+    Rails.cache.fetch("user_repos_#{current_user.slug}") do
+      GitApi.new(current_user).repos
+    end
+  end
 end

@@ -1,8 +1,6 @@
 #require 'spec_helper'
 require './lib/git_api.rb'
 require 'yaml'
-require 'webmock/rspec'
-WebMock.disable_net_connect!(allow_localhost: true)
 
 describe GitApi do
   let(:github_user)     { Struct::User.new('abc123', nil, 'github') }
