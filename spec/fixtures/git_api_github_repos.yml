@@ -1,0 +1,221 @@
+---
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: bkochendorfer
+  name: BuddyTube
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: AbuseJet
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: BuddyTube
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: chi_pub_lib_renew_script
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: clojure-koans
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: cryptopals
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: dashy
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: dogtag
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: dot-files
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: Echo-Server
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: elasticvuln
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: fingertweet
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: fitbit-pull
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: FreshChrome
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: geokit-premier-gem
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: gfms
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: github-scratchpad
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: gitsh
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: lambdajam2013
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: LazyRaid
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: mc-backup
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: mentor-pairing
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: node_step_2
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: OSM-Notes
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: our-boxen
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: paperclip
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: python_koans
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: rails_step_3
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: rest-client
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: rspec
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: Ruby-String-XOR-Optimizations
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: ruby_route_53
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: s3cmd
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: s3cmd-modification
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: security_nightmare
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: sinatra.github.com
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: sinatra_step_1
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: SinMagick
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: spelling-jam
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: Stripe-CTF
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: sycl
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: Teensy-Projects
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: typhoeus
+  private: false
+- !ruby/hash:Hashie::Mash
+  service: github
+  owner: pcorliss
+  name: vuln_admin
+  private: false
