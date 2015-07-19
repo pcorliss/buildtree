@@ -40,6 +40,8 @@ end
 
 group :test do
   gem 'webmock'
+  gem 'simplecov', :require => false
+  # 1.29s
 end
 
 group :production do
