@@ -1,6 +1,5 @@
 class Repo < ActiveRecord::Base
-  has_many :reports
-  has_many :subscriptions
+  has_many :builds
 
   validates_presence_of :service, :organization, :name
 
