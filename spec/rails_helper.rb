@@ -53,4 +53,10 @@ RSpec.configure do |config|
   config.before(:each) do
     Rails.cache.clear
   end
+
+  config.after(:all) do
+    if Repo.count > 0
+      raise "ERROR: Repo Count is now #{Repo.count}. Seed: #{RSpec.configuration.seed}. Time: #{Time.now}"
+    end
+  end
 end
