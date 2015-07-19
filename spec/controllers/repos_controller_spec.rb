@@ -50,8 +50,6 @@ describe ReposController do
         expect_any_instance_of(GitApi).to receive(:repos).and_return(repos)
         get :new
       end
-
-      it "TODO It notes repos already in the system"
     end
   end
 
@@ -153,7 +151,50 @@ describe ReposController do
 
   describe "#show" do
     let(:repo) { FactoryGirl.create(:repo) }
+    let(:repo_params) { repo.slice(:service, :organization, :name) }
+    let(:repo_api_params) {{ service: repo.service, owner: repo.organization, name: repo.name }}
+    let(:user) { FactoryGirl.create(:user) }
 
-    it "assigns all associated builds"
+    context "signed out" do
+      it "redirects the user to sign in" do
+        get :show, id: repo
+        expect(flash[:error]).to eq(["Please log in"])
+        expect(response).to redirect_to(signin_auth_path)
+      end
+    end
+
+    context "signed in" do
+      before do
+        session[:user_id] = user.id
+        repos = [Hashie::Mash.new(repo_api_params)]
+        allow_any_instance_of(GitApi).to receive(:repos).and_return(repos)
+      end
+
+      context "unauthorized" do
+        it "returns a 404 if the user isn't authorized to view the repo" do
+          expect_any_instance_of(GitApi).to receive(:repos).and_return([])
+          expect do
+            get :show, repo_params
+          end.to raise_error(ActionController::RoutingError)
+        end
+      end
+
+      context "authorized" do
+        it "returns a 200 response" do
+          get :show, id: repo
+          expect(response).to have_http_status(:ok)
+        end
+
+        it "assigns repo when accessed via id" do
+          get :show, id: repo
+          expect(assigns(:repo)).to eq(repo)
+        end
+
+        it "assigns repo when accessed via path" do
+          get :show, repo_params
+          expect(assigns(:repo)).to eq(repo)
+        end
+      end
+    end
   end
 end

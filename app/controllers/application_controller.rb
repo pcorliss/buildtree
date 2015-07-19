@@ -16,6 +16,12 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def require_repo_permissions
+    unless authorized_for_repo?(@repo)
+      raise ActionController::RoutingError.new('Not Found')
+    end
+  end
+
   def authorized_for_repo?(repo)
     user_repos.any? do |user_repo_api_resp|
       user_repo = Repo.initialize_by_api(user_repo_api_resp)
@@ -36,5 +42,23 @@ class ApplicationController < ActionController::Base
     Rails.cache.fetch("user_repos_#{current_user.slug}") do
       GitApi.new(current_user).repos
     end
+  end
+
+  def load_repo
+    if params[:id]
+      @repo = Repo.find(params[:id])
+    else
+      @repo = Repo.find_by!(
+        :service => params[:service],
+        :organization => params[:organization],
+        :name => params[:name]
+      )
+    end
+  end
+
+  def redirect_with_error(path, error)
+    flash[:error] ||= []
+    flash[:error] << error
+    redirect_to path
   end
 end

@@ -24,16 +24,12 @@ class ReposController < ApplicationController
   end
 
   def show
+    load_repo
+    require_repo_permissions
     render :json => {}
   end
 
   private
-
-  def redirect_with_error(path, error)
-    flash[:error] ||= []
-    flash[:error] << error
-    redirect_to path
-  end
 
   def set_deploy_key!(git_api, repo)
     if !repo.private_key || !git_api.deploy_key_exists?(repo.organization, repo.name, repo.fingerprint)

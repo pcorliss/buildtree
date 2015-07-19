@@ -28,3 +28,9 @@
 - [ ] SSH Access to running docker image
 - [ ] Security between builds
 - [ ] Pull Request Security
+
+#### TODOs
+* add pagination repos show
+* user dashboard redirect on auth
+* repo#new should note which repos are already in the system
+* Flush user_repos cache every 24 hours
