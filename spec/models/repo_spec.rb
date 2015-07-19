@@ -113,4 +113,28 @@ describe Repo do
       end
     end
   end
+
+  describe "#==" do
+    let(:repo_a) { FactoryGirl.build(:repo, service: 'github') }
+    let(:repo_b) { FactoryGirl.build(:repo, service: 'github') }
+
+    it "returns true if the repos have the same attributes" do
+      expect(repo_a).to eq(repo_b)
+    end
+
+    it "returns false if the repos have different services" do
+      repo_a.service = 'foo'
+      expect(repo_a).to_not eq(repo_b)
+    end
+
+    it "returns false if the repos have different organizations" do
+      repo_a.organization = 'foo'
+      expect(repo_a).to_not eq(repo_b)
+    end
+
+    it "returns false if the repos have different names" do
+      repo_a.name = 'foo'
+      expect(repo_a).to_not eq(repo_b)
+    end
+  end
 end

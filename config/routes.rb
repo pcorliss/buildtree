@@ -5,5 +5,5 @@ Rails.application.routes.draw do
     get ':provider/callback', action: :create, as: :callback
   end
 
-  resource :repo, only: [:new]
+  resources :repos, only: [:new, :create]
 end

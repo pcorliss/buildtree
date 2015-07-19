@@ -29,6 +29,12 @@ class Repo < ActiveRecord::Base
     repo
   end
 
+  def ==(other)
+    self.service == other.service &&
+    self.organization == other.organization &&
+    self.name == other.name
+  end
+
   private
 
   def self.parsed_resp(api_resp)

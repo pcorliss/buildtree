@@ -1,0 +1,92 @@
+---
+- !ruby/object:Sawyer::Resource
+  attrs:
+    :url: https://api.github.com/repos/pcorliss/gfms/hooks/5337892
+    :test_url: https://api.github.com/repos/pcorliss/gfms/hooks/5337892/test
+    :ping_url: https://api.github.com/repos/pcorliss/gfms/hooks/5337892/pings
+    :id: 5337892
+    :name: web
+    :active: true
+    :events:
+    - push
+    - pull_request
+    :config: !ruby/object:Sawyer::Resource
+      attrs:
+        :url: http://example.com/webhook
+        :content_type: json
+      _fields: !ruby/object:Set
+        hash:
+          :url: true
+          :content_type: true
+      _rels: !ruby/object:Sawyer::Relation::Map
+        map:
+          :self: !ruby/object:Sawyer::Relation
+            agent: &1 !ruby/object:Sawyer::Agent
+              endpoint: https://api.github.com/
+            name: :self
+            href: http://example.com/webhook
+            href_template: !ruby/object:Addressable::Template
+              pattern: http://example.com/webhook
+            method: :get
+            available_methods: !ruby/object:Set
+              hash:
+                :get: true
+    :last_response: !ruby/object:Sawyer::Resource
+      attrs:
+        :code: 504
+        :status: timeout
+        :message: Service Timeout
+      _fields: !ruby/object:Set
+        hash:
+          :code: true
+          :status: true
+          :message: true
+      _rels: !ruby/object:Sawyer::Relation::Map
+        map: {}
+    :updated_at: 2015-07-18 22:29:45.000000000 Z
+    :created_at: 2015-07-18 22:29:44.000000000 Z
+  _fields: !ruby/object:Set
+    hash:
+      :url: true
+      :test_url: true
+      :ping_url: true
+      :id: true
+      :name: true
+      :active: true
+      :events: true
+      :config: true
+      :last_response: true
+      :updated_at: true
+      :created_at: true
+  _rels: !ruby/object:Sawyer::Relation::Map
+    map:
+      :self: !ruby/object:Sawyer::Relation
+        agent: *1
+        name: :self
+        href: https://api.github.com/repos/pcorliss/gfms/hooks/5337892
+        href_template: !ruby/object:Addressable::Template
+          pattern: https://api.github.com/repos/pcorliss/gfms/hooks/5337892
+        method: :get
+        available_methods: !ruby/object:Set
+          hash:
+            :get: true
+      :test: !ruby/object:Sawyer::Relation
+        agent: *1
+        name: :test
+        href: https://api.github.com/repos/pcorliss/gfms/hooks/5337892/test
+        href_template: !ruby/object:Addressable::Template
+          pattern: https://api.github.com/repos/pcorliss/gfms/hooks/5337892/test
+        method: :get
+        available_methods: !ruby/object:Set
+          hash:
+            :get: true
+      :ping: !ruby/object:Sawyer::Relation
+        agent: *1
+        name: :ping
+        href: https://api.github.com/repos/pcorliss/gfms/hooks/5337892/pings
+        href_template: !ruby/object:Addressable::Template
+          pattern: https://api.github.com/repos/pcorliss/gfms/hooks/5337892/pings
+        method: :get
+        available_methods: !ruby/object:Set
+          hash:
+            :get: true

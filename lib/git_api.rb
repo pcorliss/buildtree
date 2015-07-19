@@ -38,6 +38,27 @@ class GitApi
     key.encrypted_private_key
   end
 
+  def add_new_webhook(owner, name, target_url)
+    @source.create_hook(
+      "#{owner}/#{name}",
+      'web',
+      {
+        url: target_url,
+        content_type: 'json',
+      },
+      {
+        events: ['push', 'pull_request'],
+        active: true,
+      }
+    )
+  end
+
+  def webhook_exists?(owner, name, target_url)
+    @source.hooks("#{owner}/#{name}").any? do |hook|
+      hook.config.url == target_url
+    end
+  end
+
   def deploy_key_exists?(owner, name, fingerprint)
     deploy_keys = case service
       when :github

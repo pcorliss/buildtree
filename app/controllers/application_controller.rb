@@ -19,16 +19,16 @@ class ApplicationController < ActionController::Base
   def authorized_for_repo?(repo)
     user_repos.any? do |user_repo_api_resp|
       user_repo = Repo.initialize_by_api(user_repo_api_resp)
-      repo.name == user_repo.name &&
-      repo.organization == user_repo.organization &&
-      repo.service == user_repo.service
+      repo == user_repo
     end
   end
 
   def require_session
-    flash[:error] ||= []
-    flash[:error] << "Please log in"
-    redirect_to signin_auth_path unless logged_in?
+    unless logged_in?
+      flash[:error] ||= []
+      flash[:error] << "Please log in"
+      redirect_to signin_auth_path
+    end
   end
 
   # TODO expire this cache every 24 hours

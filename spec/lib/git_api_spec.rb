@@ -23,9 +23,6 @@ describe GitApi do
     let(:api) { GitApi.new(github_user) }
 
     before do
-      # 4096 bits in prod is a little sluggish
-      ENV['SSH_KEY_SIZE'] = '256'
-      ENV['SSH_PASSPHRASE'] = 'hello world'
       allow_any_instance_of(SSHKey).to receive(:ssh_public_key).and_return(pub_key)
       allow_any_instance_of(SSHKey).to receive(:encrypted_private_key).and_return(priv_key)
       allow_any_instance_of(Octokit::Client).to receive(:add_deploy_key)
@@ -66,7 +63,7 @@ describe GitApi do
 
   describe "#deploy_key_exists?" do
     let(:public_key) { File.read('spec/fixtures/sample_key.pub') }
-    let(:fingerprint) { 'f3:d4:ca:6b:07:8a:af:f8:a7:70:04:ec:5a:af:c6:dc' }
+    let(:fingerprint) { '72:16:2d:8f:b1:a3:a5:db:1d:ed:f8:b3:05:e8:94:6c' }
 
     shared_examples "checking a key" do
       let(:invalid_fingerprint) { 'invalid_fingerprint' }
@@ -125,6 +122,41 @@ describe GitApi do
         expect(repos.first.owner).to eq('bkochendorfer')
         expect(repos.first.service).to eq('github')
         expect(repos.first.private).to eq(false)
+      end
+    end
+  end
+
+  context "web hooks" do
+    let(:hooks_fixture) do
+      hooks = YAML.load_file "spec/fixtures/hooks.yaml"
+      hooks.each do |hook|
+        hook.instance_variable_set("@_metaclass", Sawyer::Resource)
+        hook.config.instance_variable_set("@_metaclass", Sawyer::Resource)
+      end
+    end
+
+    before do
+      allow_any_instance_of(Octokit::Client).to receive(:create_hook)
+      allow_any_instance_of(Octokit::Client).to receive(:hooks)
+    end
+
+    describe "#add_new_webhook" do
+      let(:api) { GitApi.new(github_user) }
+
+      it "adds a new webhook" do
+        expect_any_instance_of(Octokit::Client).to receive(:create_hook)
+        api.add_new_webhook("foo", "bar", "http://example.com/webhook")
+      end
+    end
+
+    describe "#webhook_exists?" do
+      let(:api) { GitApi.new(github_user) }
+
+      it "checks for the existance of a webhook" do
+        expect_any_instance_of(Octokit::Client).to receive(:hooks).with("foo/bar").at_least(:once).and_return(hooks_fixture)
+        api.add_new_webhook("foo", "bar", "http://example.com/webhook")
+        expect(api.webhook_exists?("foo", "bar", "http://example.com/webhook")).to be_truthy
+        expect(api.webhook_exists?("foo", "bar", "http://example.com/missing")).to be_falsey
       end
     end
   end
