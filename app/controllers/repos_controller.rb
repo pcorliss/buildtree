@@ -18,9 +18,13 @@ class ReposController < ApplicationController
     set_webhook!(git_api, repo)
 
     repo.save
-    render :json => {}
+    redirect_to repo_path(repo)
   rescue Octokit::NotFound
     redirect_with_error(new_repo_path, "You do not have rights to create this repo")
+  end
+
+  def show
+    render :json => {}
   end
 
   private

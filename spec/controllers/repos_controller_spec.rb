@@ -9,6 +9,24 @@ describe ReposController do
     it "routes to #create" do
       expect(post: "/repos").to route_to("repos#create")
     end
+
+    it "routes to #show" do
+      expect(get: "/repos/1").to route_to(
+        :controller => "repos",
+        :action => "show",
+        :id => "1",
+      )
+    end
+
+    it "routes to vanity show" do
+      expect(get: "/repos/github/foo/bar").to route_to(
+        :controller => "repos",
+        :action => "show",
+        :service => "github",
+        :organization => "foo",
+        :name => "bar",
+      )
+    end
   end
 
   describe "#new" do
@@ -126,8 +144,16 @@ describe ReposController do
         expect(repo.private_key).to_not eq(original_private_key)
       end
 
-      it "BLOCKED ON BUILD creates a build"
-      it "BLOCKED ON BUILD redirects to the build show page"
+      it "redirects to the repo show page" do
+        post :create, repo: valid_params
+        expect(response).to redirect_to(repo_path Repo.last)
+      end
     end
+  end
+
+  describe "#show" do
+    let(:repo) { FactoryGirl.create(:repo) }
+
+    it "assigns all associated builds"
   end
 end
