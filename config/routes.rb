@@ -8,10 +8,9 @@ Rails.application.routes.draw do
   resources :repos, only: [:new, :create, :show] do
     collection do
       get ':service/:organization/:name', to: 'repos#show', as: 'long'
+      post ':service/:organization/:name/webhook', to: 'repos#webhook', as: 'webhook'
     end
   end
-
-  match 'webhook', via: [:post], controller: 'webhook', action: 'receive'
 end
 
 Rails.application.routes.url_helpers.module_eval do

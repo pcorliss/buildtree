@@ -29,6 +29,10 @@ class ReposController < ApplicationController
     render :json => {}
   end
 
+  def webhook
+    render :json => {}
+  end
+
   private
 
   def set_deploy_key!(git_api, repo)
@@ -39,6 +43,7 @@ class ReposController < ApplicationController
   end
 
   def set_webhook!(git_api, repo)
+    webhook_url = webhook_repos_url(repo.slice(:service, :organization, :name).symbolize_keys)
     unless git_api.webhook_exists?(repo.organization, repo.name, webhook_url)
       git_api.add_new_webhook(repo.organization, repo.name, webhook_url)
     end

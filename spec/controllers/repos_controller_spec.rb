@@ -18,10 +18,20 @@ describe ReposController do
       )
     end
 
-    it "routes to vanity show" do
+    it "routes to vanity #show" do
       expect(get: "/repos/github/foo/bar").to route_to(
         :controller => "repos",
         :action => "show",
+        :service => "github",
+        :organization => "foo",
+        :name => "bar",
+      )
+    end
+
+    it "routes to #webhook" do
+      expect(post: "/repos/github/foo/bar/webhook").to route_to(
+        :controller => "repos",
+        :action => "webhook",
         :service => "github",
         :organization => "foo",
         :name => "bar",
