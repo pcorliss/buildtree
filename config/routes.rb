@@ -6,4 +6,6 @@ Rails.application.routes.draw do
   end
 
   resources :repos, only: [:new, :create]
+
+  match 'webhook', via: [:post], controller: 'webhook', action: 'receive'
 end

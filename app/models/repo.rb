@@ -35,6 +35,12 @@ class Repo < ActiveRecord::Base
     self.name == other.name
   end
 
+  def fingerprint
+    if self.private_key
+      SSHKey.new(self.private_key, passphrase: ENV['SSH_PASSPHRASE']).fingerprint
+    end
+  end
+
   private
 
   def self.parsed_resp(api_resp)

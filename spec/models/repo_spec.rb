@@ -137,4 +137,16 @@ describe Repo do
       expect(repo_a).to_not eq(repo_b)
     end
   end
+
+  describe "#fingerprint" do
+    it "returns the key fingerprint" do
+      repo = FactoryGirl.build(:private_key_repo)
+      expect(repo.fingerprint).to eq("72:16:2d:8f:b1:a3:a5:db:1d:ed:f8:b3:05:e8:94:6c")
+    end
+
+    it "returns nil if there is no private key" do
+      repo = FactoryGirl.build(:repo)
+      expect(repo.fingerprint).to be_nil
+    end
+  end
 end

@@ -33,7 +33,7 @@ describe ReposController do
         get :new
       end
 
-      xit "TODO It notes repos already in the system"
+      it "TODO It notes repos already in the system"
     end
   end
 
@@ -58,6 +58,8 @@ describe ReposController do
         allow_any_instance_of(GitApi).to receive(:repos).and_return(repos)
         allow_any_instance_of(GitApi).to receive(:github_add_key)
         allow_any_instance_of(GitApi).to receive(:deploy_key_exists?).and_return(false)
+        allow_any_instance_of(GitApi).to receive(:add_new_webhook)
+        allow_any_instance_of(GitApi).to receive(:webhook_exists?).and_return(false)
       end
 
       it "creates a repo" do
@@ -82,7 +84,23 @@ describe ReposController do
         expect(response).to redirect_to(new_repo_path)
       end
 
-      it "TODO creates a webhook"
+      it "creates a webhook" do
+        expect_any_instance_of(GitApi).to receive(:add_new_webhook)
+        post :create, repo: valid_params
+      end
+
+      it "handles a non-admin error on hook creation and does not create the repo" do
+        expect_any_instance_of(GitApi).to receive(:add_new_webhook).and_raise(Octokit::NotFound)
+        post :create, repo: valid_params
+        expect(flash[:error]).to eq(["You do not have rights to create this repo"])
+        expect(response).to redirect_to(new_repo_path)
+      end
+
+      it "doesn't try to create a new webhook if one already exists" do
+        expect_any_instance_of(GitApi).to receive(:webhook_exists?).and_return(true)
+        expect_any_instance_of(GitApi).to_not receive(:add_new_webhook)
+        post :create, repo: valid_params
+      end
 
       it "creates a deploy key" do
         post :create, repo: valid_params
@@ -98,10 +116,18 @@ describe ReposController do
         expect(repo.reload.private_key).to eq(original_private_key)
       end
 
-      it "TODO updates a repo if it's not setup properly"
+      it "recreates the deploy key if it doesn't exist on the remote" do
+        repo = FactoryGirl.create(:private_key_repo)
+        original_private_key = repo.private_key
+        expect_any_instance_of(GitApi).to receive(:github_add_key)
+        expect_any_instance_of(GitApi).to receive(:deploy_key_exists?).and_return(false)
+        post :create, repo: private_params
+        expect(repo.reload.private_key).to_not be_nil
+        expect(repo.private_key).to_not eq(original_private_key)
+      end
+
       it "BLOCKED ON BUILD creates a build"
       it "BLOCKED ON BUILD redirects to the build show page"
     end
   end
-
 end

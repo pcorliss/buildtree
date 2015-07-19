@@ -8,25 +8,39 @@ class ReposController < ApplicationController
 
   def create
     repo = Repo.find_or_initialize_by_api(Hashie::Mash.new(params[:repo]))
-    if authorized_for_repo?(repo)
-      git_api = GitApi.new(current_user)
 
-      if repo.private_key
-        fingerprint = SSHKey.new(repo.private_key, passphrase: ENV['SSH_PASSPHRASE'])
-        unless git_api.deploy_key_exists?(repo.organization, repo.name, fingerprint)
-          #recreate
-        end
-      else
-        private_key = git_api.add_new_deploy_key(repo.organization, repo.name)
-        repo.private_key = private_key
-      end
+    unless authorized_for_repo?(repo)
+      return redirect_with_error(new_repo_path, "You do not have rights to create this repo")
+    end
 
-      repo.save
-      render :json => {}
-    else
-      flash[:error] ||= []
-      flash[:error] << "You do not have rights to create this repo"
-      redirect_to new_repo_path
+    git_api = GitApi.new(current_user)
+    set_deploy_key!(git_api, repo)
+    set_webhook!(git_api, repo)
+
+    repo.save
+    render :json => {}
+  rescue Octokit::NotFound
+    redirect_with_error(new_repo_path, "You do not have rights to create this repo")
+  end
+
+  private
+
+  def redirect_with_error(path, error)
+    flash[:error] ||= []
+    flash[:error] << error
+    redirect_to path
+  end
+
+  def set_deploy_key!(git_api, repo)
+    if !repo.private_key || !git_api.deploy_key_exists?(repo.organization, repo.name, repo.fingerprint)
+      private_key = git_api.add_new_deploy_key(repo.organization, repo.name)
+      repo.private_key = private_key
+    end
+  end
+
+  def set_webhook!(git_api, repo)
+    unless git_api.webhook_exists?(repo.organization, repo.name, webhook_url)
+      git_api.add_new_webhook(repo.organization, repo.name, webhook_url)
     end
   end
 end
