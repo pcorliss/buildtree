@@ -4,7 +4,7 @@
 
 ### Needs
 - [x] Github Integration (Auth)
-- [ ] Github Integration (WebHook)
+- [x] Github Integration (WebHook)
 - [ ] Github Integration (Callbacks)
 - [ ] Isolated Builds
 - [ ] Secrets
@@ -34,3 +34,4 @@
 * user dashboard redirect on auth
 * repo#new should note which repos are already in the system
 * Flush user_repos cache every 24 hours
+* Create a repo query event which enques a build on repo creation.

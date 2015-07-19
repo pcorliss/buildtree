@@ -207,4 +207,69 @@ describe ReposController do
       end
     end
   end
+
+  describe "#webhook", :type => :request do
+    let(:repo) { FactoryGirl.create(:repo) }
+    let(:push_event_body) { File.read('spec/fixtures/github_webhook_push.json') }
+    let(:pr_event_body) { File.read('spec/fixtures/github_webhook_pr.json') }
+    let(:ping_event_body) { File.read('spec/fixtures/github_webhook_ping.json') }
+    let(:endpoint) { '/repos/github/bar/buzz/webhook' }
+    let(:options) {{format: 'json'}}
+
+    it "returns a 404 if it can't find the repo" do
+      expect do
+        post endpoint, push_event_body, options
+      end.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    context "with a repo" do
+      before do
+        repo
+      end
+
+      it "creates a build when it receives a push event" do
+        expect do
+          post endpoint, push_event_body, options
+        end.to change{Build.count}.from(0).to(1)
+      end
+
+      it "creates a build when it receives a pull request event" do
+        expect do
+          post endpoint, pr_event_body, options
+        end.to change{Build.count}.from(0).to(1)
+      end
+
+      it "does not create a build when it receives an event with a duplicate repo branch and sha" do
+        post endpoint, push_event_body, options
+        expect do
+          post endpoint, pr_event_body, options
+        end.to_not change{Build.count}
+      end
+
+      it "returns a 422 if it can't process the body" do
+        post endpoint, "{{{{", options
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "returns a 422 if it can't process the body due to missing sha" do
+        post endpoint, '{"ref": "refs/heads/master", "head_commit": {"id":""}}', options
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "returns a 422 if it can't process the body due to missing branch" do
+        post endpoint, '{"ref": "", "head_commit": {"id": "abcdef"}}', options
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "returns a 422 if it can't process the body due to missing branch" do
+        post endpoint, '{}', options
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "returns a 200 for ping events" do
+        post endpoint, ping_event_body, options.merge('X-GitHub-Event' => 'ping')
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
 end

@@ -61,4 +61,8 @@ class ApplicationController < ActionController::Base
     flash[:error] << error
     redirect_to path
   end
+
+  def render_422
+    render json: {error: 422}, status: 422
+  end
 end

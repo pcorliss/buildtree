@@ -1,5 +1,6 @@
 class ReposController < ApplicationController
-  before_filter :require_session
+  before_filter :require_session, only: [:new, :create, :show]
+  before_filter :load_repo, only: [:show, :webhook]
 
   def new
     @user_repos = user_repos
@@ -24,16 +25,50 @@ class ReposController < ApplicationController
   end
 
   def show
-    load_repo
     require_repo_permissions
     render :json => {}
   end
 
   def webhook
+    if 'ping' == request.headers['X-GitHub-Event']
+      return render :json => {event: 'pong'}
+    end
+
+    webhook_body = JSON.parse(request.body.read)
+    sha = webhook_sha(webhook_body)
+    branch = webhook_branch(webhook_body)
+
+    return render_422 unless sha.present? && branch.present?
+    unless @repo.builds.exists?(branch: branch, sha: sha)
+      @repo.builds.create(branch: branch, sha: sha)
+    end
     render :json => {}
+  rescue JSON::ParserError
+    render_422
   end
 
   private
+
+  def webhook_sha(webhook_body)
+    if webhook_body['head_commit']
+      webhook_body['head_commit']['id']
+    else
+      webhook_body['pull_request']['head']['sha']
+    end
+  rescue NoMethodError
+    nil
+  end
+
+  def webhook_branch(webhook_body)
+    if webhook_body['ref']
+      webhook_body['ref'][/^refs.heads.(.*)/]
+      $1
+    else
+      webhook_body['pull_request']['head']['ref']
+    end
+  rescue NoMethodError
+    nil
+  end
 
   def set_deploy_key!(git_api, repo)
     if !repo.private_key || !git_api.deploy_key_exists?(repo.organization, repo.name, repo.fingerprint)
