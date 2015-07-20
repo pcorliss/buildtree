@@ -149,4 +149,13 @@ describe Repo do
       expect(repo.fingerprint).to be_nil
     end
   end
+
+  describe "#git_url" do
+    context "github" do
+      it "returns the git ssh url" do
+        repo = FactoryGirl.build(:repo)
+        expect(repo.git_url).to eq('git@github.com:bar/buzz.git')
+      end
+    end
+  end
 end

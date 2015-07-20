@@ -13,6 +13,12 @@ class Repo < ActiveRecord::Base
     end
   end
 
+  def git_url(*args)
+    if service == 'github'
+      github_git_url(*args)
+    end
+  end
+
   def short_name
     "#{organization}/#{name}"
   end
@@ -60,5 +66,9 @@ class Repo < ActiveRecord::Base
       external << "/tree/#{sha}" if sha.present?
     end
     external
+  end
+
+  def github_git_url
+    "git@github.com:#{self.organization}/#{self.name}.git"
   end
 end

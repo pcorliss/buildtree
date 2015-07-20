@@ -19,8 +19,11 @@ gem 'sass-rails'
 gem 'less-rails'
 gem 'therubyracer'
 gem 'twitter-bootswatch-rails', '~> 3.1.1'
-gem "font-awesome-rails"
+gem 'font-awesome-rails'
 gem 'uglifier', '>= 1.3.0'
+
+gem 'delayed_job_active_record', '~> 4.0.3'
+gem 'daemons', '~> 1.2.3'
 
 group :development do
   gem 'spring'

@@ -52,11 +52,16 @@ RSpec.configure do |config|
 
   config.before(:each) do
     Rails.cache.clear
+
+    # Catch all on system command execution
+    allow(Open3).to receive(:popen3).and_raise("System Command Execution")
   end
 
   config.after(:all) do
     if Repo.count > 0
       raise "ERROR: Repo Count is now #{Repo.count}. Seed: #{RSpec.configuration.seed}. Time: #{Time.now}"
     end
+
+    ENV['GIT_SSH_COMMAND'] = nil
   end
 end
