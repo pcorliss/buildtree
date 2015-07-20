@@ -1,10 +1,10 @@
 class ReposController < ApplicationController
   before_filter :require_session, only: [:new, :create, :show]
   before_filter :load_repo, only: [:show, :webhook]
+  skip_before_filter :verify_authenticity_token, :only => [:webhook]
 
   def new
-    @user_repos = user_repos
-    render :json => @user_repos
+    @repos = user_repos
   end
 
   def create

@@ -8,9 +8,11 @@ class BuildJob
 
   def perform
     tmpdir do |dir|
+      puts "Dir: #{dir}"
       write_private_key(dir)
       git_clone(dir)
       run_docker_container(dir)
+      `cp -pr #{dir} tmp/`
     end
   end
 
@@ -24,6 +26,7 @@ class BuildJob
       fh.chmod(0600)
       fh.write SSHKey.new(@repo.private_key, passphrase: ENV['SSH_PASSPHRASE']).private_key
       ENV['GIT_SSH_COMMAND'] = "ssh -i #{fh.path}"
+      puts "PrivateKey: #{fh.path}"
     end
   end
 
@@ -32,16 +35,24 @@ class BuildJob
   end
 
   def run_docker_container(dir)
-    system_cmd("docker run -t -i -v #{dir}:/var/ci ubuntu:14.04 /var/ci/source/ci.sh")
+    system_cmd("docker run -i -v #{dir}:/var/ci ubuntu:14.04 /var/ci/source/ci.sh")
   end
 
   def system_cmd(cmd)
     exit_code = nil
     Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thr|
-      stdout.gets(nil)
+      stdout_str = stdout.gets(nil)
       stdout.close
-      stderr.gets(nil)
+      stderr_str = stderr.gets(nil)
       stderr.close
+
+      File.open('/tmp/system_cmd.log', 'a') do |fh|
+        fh.puts "STDOUT:"
+        fh.write stdout_str
+        fh.puts "STDERR:"
+        fh.write stderr_str
+      end
+
       exit_code = wait_thr.value
     end
     exit_code

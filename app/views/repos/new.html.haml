@@ -1,0 +1,10 @@
+.col-md-20.col-sm-24.col-lg-16.col-centered
+  = render 'flash'
+
+  %legend Create Repo
+
+  %ul
+    - @repos.each do |repo|
+      %li
+        = button_to "#{repo.owner}/#{repo.name}", repos_path, method: :post, params: {'[repo]service' => repo.service, '[repo]owner' => repo.owner, '[repo]name' => repo.name}
+

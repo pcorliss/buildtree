@@ -38,3 +38,4 @@
 * Command Output and docker output to user/logs
 * Construct a shell script from a config file
 * Destroy docker instance after running
+* Do something with exit codes
