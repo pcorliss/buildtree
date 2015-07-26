@@ -26,7 +26,6 @@ class ReposController < ApplicationController
 
   def show
     require_repo_permissions
-    render :json => {}
   end
 
   def webhook
