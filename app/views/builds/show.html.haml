@@ -1,0 +1,28 @@
+.col-md-20.col-sm-24.col-lg-16.col-centered
+  = render 'flash'
+
+  %legend Build Show
+
+  %dl.dl-horizontal
+    %dt ID
+    %dd= @build.id
+
+    %dt Branch
+    %dd= @build.branch
+
+    %dt SHA
+    %dd= @build.short_sha
+
+    %dt Created
+    %dd= @build.created_at
+
+    %dt Success
+    - if @build.success?
+      %dd.text-success= fa_icon "check"
+    - else
+      %dd.text-danger= fa_icon "times"
+
+    %dt Git
+    %dd= link_to @repo.external_url, @repo.external_url
+
+  %legend Build Log

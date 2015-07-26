@@ -5,20 +5,22 @@
 
   = link_to @repo.external_url, @repo.external_url
 
-  %table.table.table-striped
+  %table.table.table-striped.table-hover
     %tr
-      %th
+      %th #
+      %th Branch
       %th SHA
       %th Created
+      %th
 
-    -#This should be paginated
-    - @repo.builds.each do |build|
-      - success_class = build.success? ? "success" : "failure"
+    - @repo.builds.reverse.each do |build|
       %tr
+        %td= build.id
+        %td= build.branch
+        %td= build.short_sha
+        %td= build.created_at
         - if build.success?
           %td.text-success= fa_icon "check"
         - else
           %td.text-danger= fa_icon "times"
-        %td= build.short_sha
-        %td= build.created_at
 

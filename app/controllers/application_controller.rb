@@ -55,6 +55,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def load_build
+    if params[:id]
+      @build = Build.find(params[:id])
+      @repo = @build.repo
+    end
+  end
+
   def redirect_with_error(path, error)
     flash[:error] ||= []
     flash[:error] << error

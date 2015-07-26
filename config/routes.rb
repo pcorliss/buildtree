@@ -9,8 +9,11 @@ Rails.application.routes.draw do
     collection do
       get ':service/:organization/:name', to: 'repos#show', as: 'long'
       post ':service/:organization/:name/webhook', to: 'repos#webhook', as: 'webhook'
+      get ':service/:organization/:name/:id', to: 'builds#show', as: 'builds'
     end
   end
+
+  resources :builds, only: [:show]
 end
 
 Rails.application.routes.url_helpers.module_eval do
