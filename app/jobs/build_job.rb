@@ -10,7 +10,8 @@ class BuildJob
     tmpdir do |dir|
       write_private_key(dir)
       git_clone(dir)
-      run_docker_container(dir)
+      process = run_docker_container(dir)
+      @build.success = (process.exitstatus == 0)
       #`cp -pr #{dir} tmp/`
     end
   end
@@ -37,7 +38,7 @@ class BuildJob
   end
 
   def system_cmd(cmd)
-    exit_code = nil
+    exit_val = nil
     Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thr|
       puts "Started..."
       stdin.close
@@ -50,9 +51,9 @@ class BuildJob
       stderr.close
 
       puts "Waiting"
-      exit_code = wait_thr.value
-      puts "ExitCode: #{exit_code}"
+      exit_val = wait_thr.value
+      puts "ExitCode: #{exit_val}"
     end
-    exit_code
+    exit_val
   end
 end

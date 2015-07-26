@@ -5,11 +5,12 @@ describe BuildJob do
   let(:build) { FactoryGirl.build(:build, repo: repo) }
   let(:build_job) { BuildJob.new(build) }
   let(:tmpdir) { Dir.mktmpdir('build_job_spec') }
+  let(:mock_process) { double(Process::Status, exitstatus: 0) }
 
   describe "#perform" do
     before do
       allow(Dir).to receive(:mktmpdir).and_yield(tmpdir)
-      allow(build_job).to receive(:system_cmd).and_return(0)
+      allow(build_job).to receive(:system_cmd).and_return(mock_process)
       ENV['GIT_SSH_COMMAND'] = nil
     end
 
@@ -44,6 +45,18 @@ describe BuildJob do
       expected_docker_cmd = "docker run -i -v #{tmpdir}:/var/ci ubuntu:14.04 /var/ci/source/ci.sh"
       expect(build_job).to receive(:system_cmd).with(expected_docker_cmd)
       build_job.perform
+    end
+
+    it "uses the exit code of the docker container to set the repo status" do
+      build_job.perform
+      expect(build.success?).to be_truthy
+    end
+
+    it "uses the exit code of the docker container to set a failing repo status" do
+      mock_process = double(Process::Status, exitstatus: 1)
+      allow(build_job).to receive(:system_cmd).and_return(mock_process)
+      build_job.perform
+      expect(build.success?).to be_falsey
     end
   end
 end

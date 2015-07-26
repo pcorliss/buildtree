@@ -6,7 +6,7 @@
 - [x] Github Integration (Auth)
 - [x] Github Integration (WebHook)
 - [ ] Github Integration (Callbacks)
-- [ ] Isolated Builds
+- [x] Isolated Builds
 - [ ] Secrets
 - [ ] Code based configuration
 
@@ -14,7 +14,7 @@
 - [ ] Display/Dashboards
 - [ ] Dependent Builds
 - [ ] Matrix Builds
-- [ ] Docker based build images
+- [x] Docker based build images
 - [ ] Slack Notifications
 - [ ] Monorepo splits
 - [ ] Elastic Builds (Spin up Workers on demand)
@@ -38,4 +38,6 @@
 * Command Output and docker output to user/logs
 * Construct a shell script from a config file
 * Destroy docker instance after running
-* Do something with exit codes
+* Present the logs as the build is running
+* save the logs somewhere
+* a usable UI
