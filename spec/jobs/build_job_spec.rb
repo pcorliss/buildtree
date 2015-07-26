@@ -41,7 +41,7 @@ describe BuildJob do
     end
 
     it "runs docker container" do
-      expected_docker_cmd = "docker run -t -i -v #{tmpdir}:/var/ci ubuntu:14.04 /var/ci/source/ci.sh"
+      expected_docker_cmd = "docker run -i -v #{tmpdir}:/var/ci ubuntu:14.04 /var/ci/source/ci.sh"
       expect(build_job).to receive(:system_cmd).with(expected_docker_cmd)
       build_job.perform
     end
