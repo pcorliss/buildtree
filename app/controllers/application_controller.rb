@@ -37,9 +37,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # TODO expire this cache every 24 hours
   def user_repos
-    Rails.cache.fetch("user_repos_#{current_user.slug}") do
+    Rails.cache.fetch("user_repos_#{current_user.slug}", expires_in: 24.hours) do
       GitApi.new(current_user).repos
     end
   end

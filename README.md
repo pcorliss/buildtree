@@ -31,7 +31,7 @@
 
 #### TODOs
 - [ ] add pagination repos show
-- [ ] Flush user_repos cache every 24 hours
+- [x] Flush user_repos cache every 24 hours
 - [ ] Create a repo query event which enques a build on repo creation.
 - [ ] Command Output and docker output to user/logs
 - [ ] Construct a shell script from a config file
