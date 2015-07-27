@@ -5,7 +5,7 @@
 
   = link_to @repo.external_url, @repo.external_url
 
-  %table.table.table-striped.table-hover
+  %table.table.table-striped.table-hover.no-highlights
     %tr
       %th #
       %th Branch
@@ -14,13 +14,13 @@
       %th
 
     - @repo.builds.reverse.each do |build|
+      - path = builds_repos_path(service: @repo.service, organization: @repo.organization, name: @repo.name, id: build.id)
       %tr
-        %td= build.id
-        %td= build.branch
-        %td= build.short_sha
-        %td= build.created_at
+        %td= link_to build.id, path
+        %td= link_to build.branch, path
+        %td= link_to build.short_sha, path
+        %td= link_to build.created_at, path
         - if build.success?
-          %td.text-success= fa_icon "check"
+          %td.text-success= link_to fa_icon("check"), path
         - else
-          %td.text-danger= fa_icon "times"
-
+          %td.text-danger= link_to fa_icon("times"), path

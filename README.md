@@ -35,10 +35,9 @@
   - [x] Create page - point click
   - [x] Repo show page
     - [x] Colored dots
-  - [ ] Build show page
-    - [ ] Present the logs as the build is running
-    - [ ] Link to build show from repo show
-    - [ ] save the logs somewhere
+  - [x] Build show page
+    - [x] Link to build show from repo show
+    - [x] save the logs somewhere
   - [ ] user dash
     - [ ] Root redirects to user dash
     - [ ] Root redirects to signup if you're not signed in
@@ -47,6 +46,9 @@
   - [ ] Build Head button on repo show
 - [ ] Construct a shell script from a config file
 - [ ] Check out a specific SHA, not just the head of the branch
+- [ ] Setup Websocket communication between front-end and builder
+- [ ] Setup Websocket communication between front-end and client
+- [ ] Save logs to S3 instead of the DB
 - [ ] Create a repo query event which enques a build on repo creation.
 - [ ] Destroy docker instance after running
 - [ ] add pagination repos show
