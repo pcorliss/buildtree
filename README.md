@@ -54,3 +54,4 @@ BuildTree is an open source continous integration service.
 - [ ] Pull Request Security
 - [ ] Fine-Grained Security support, view vs. create vs. admin
 - [ ] Build isolation security work
+- [ ] Shareable Custom Dashboards
