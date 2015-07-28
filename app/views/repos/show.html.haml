@@ -5,4 +5,4 @@
 
   = link_to @repo.external_url, @repo.external_url
 
-  = render 'shared/builds', locals: {builds: @repo.builds.reverse}
+  = render "builds/collection", builds: @repo.builds.reverse

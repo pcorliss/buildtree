@@ -3,8 +3,34 @@
 
   %legend Create Repo
 
-  %ul
+  -#%ul
     - @repos.each do |repo|
       %li
-        = button_to "#{repo.owner}/#{repo.name}", repos_path, method: :post, params: {'[repo]service' => repo.service, '[repo]owner' => repo.owner, '[repo]name' => repo.name}
+        = button_to "#{"Follow::" unless repo.new_record?}#{repo.organization}/#{repo.name}", repos_path, method: :post, params: {'[repo]service' => repo.service, '[repo]owner' => repo.organization, '[repo]name' => repo.name}
+
+  %table.table.table-striped.table-hover.no-highlights
+    %tr
+      %th Service
+      %th Path
+      %th Action
+
+    - @repos.each do |repo|
+      %tr
+        %td
+          = link_to repo.external_url do
+            = fa_icon(repo.service)
+
+        - if repo.new_record?
+          %td= repo.short_name
+        - else
+          %td= link_to repo.short_name, repo_path(repo)
+
+        %td
+          - if repo.new_record?
+            = button_to "Build", repos_path(repo: repo.to_params), method: :post, class: 'btn btn-success btn-xs'
+          - elsif @followed_repos.include? repo
+            = button_to "Unfollow", unfollow_repos_path(repo.to_params.symbolize_keys), method: :post, class: 'btn btn-warning btn-xs'
+          - else
+            = button_to "Follow", follow_repos_path(repo.to_params.symbolize_keys), method: :post, class: 'btn btn-primary btn-xs'
+
 

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Repo do
   describe "validations" do
@@ -156,6 +156,28 @@ describe Repo do
         repo = FactoryGirl.build(:repo)
         expect(repo.git_url).to eq('git@github.com:bar/buzz.git')
       end
+    end
+  end
+
+  describe "#to_params" do
+    it "returns service, organization, and name" do
+      repo = FactoryGirl.build(:repo)
+      expect(repo.to_params).to eq({
+        "service" => "github",
+        "organization" => "bar",
+        "name" => "buzz",
+      })
+    end
+  end
+
+  describe "#to_api_params" do
+    it "returns service, owner, and name" do
+      repo = FactoryGirl.build(:repo)
+      expect(repo.to_api_params).to eq({
+        "service" => "github",
+        "owner" => "bar",
+        "name" => "buzz",
+      })
     end
   end
 end

@@ -23,12 +23,13 @@ BuildTree is an open source continous integration service.
   - [x] Build show page
     - [x] Link to build show from repo show
     - [x] save the logs somewhere
-  - [ ] user dash
+  - [x] user dash
     - [x] Root redirects to user dash
     - [x] Root redirects to signup if you're not signed in
     - [x] Fix other redirects
-  - [ ] repo#new should note which repos are already in the system
+  - [x] repo#new should note which repos are already in the system
   - [ ] Build Head button on repo show
+  - [ ] Nav (SignIn/Out, Dashboard, Add Repo)
 - [ ] Construct a shell script from a config file
 - [ ] Check out a specific SHA, not just the head of the branch
 - [ ] Github Integration (Callbacks)

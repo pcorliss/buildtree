@@ -37,6 +37,36 @@ describe ReposController do
         :name => "bar",
       )
     end
+
+    it "routes to #follow" do
+      expect(post: "/repos/github/foo/bar/follow").to route_to(
+        :controller => "repos",
+        :action => "follow",
+        :service => "github",
+        :organization => "foo",
+        :name => "bar",
+      )
+    end
+
+    it "routes to #unfollow" do
+      expect(post: "/repos/github/foo/bar/unfollow").to route_to(
+        :controller => "repos",
+        :action => "unfollow",
+        :service => "github",
+        :organization => "foo",
+        :name => "bar",
+      )
+    end
+
+    it "handles names with periods in them" do
+      expect(get: "/repos/github/foo/bar.foo").to route_to(
+        :controller => "repos",
+        :action => "show",
+        :service => "github",
+        :organization => "foo",
+        :name => "bar.foo",
+      )
+    end
   end
 
   describe "#new" do
@@ -50,15 +80,28 @@ describe ReposController do
 
     context "signed in" do
       let(:user) { FactoryGirl.create(:user) }
+      let(:repo) { FactoryGirl.create(:repo)}
+      let(:private_repo) { FactoryGirl.create(:private_key_repo)}
+      let(:repo_params) {{ service: repo.service, owner: repo.organization, name: repo.name }}
+      let(:private_params) {{ service: private_repo.service, owner: private_repo.organization, name: private_repo.name }}
 
       before do
         session[:user_id] = user.id
       end
 
       it "Usees the API to grab the users repos" do
-        repos = []
+        repos = [repo_params]
         expect_any_instance_of(GitApi).to receive(:repos).and_return(repos)
         get :new
+        expect(assigns(:repos)).to eq([repo])
+      end
+
+      it "assigns the intersection of repos a user already follows" do
+        repos = [repo_params, private_params]
+        allow_any_instance_of(GitApi).to receive(:repos).and_return(repos)
+        user.repos << repo
+        get :new
+        expect(assigns(:followed_repos)).to eq(Set.new([repo]))
       end
     end
   end
@@ -74,14 +117,19 @@ describe ReposController do
 
     context "signed in" do
       let(:user) { FactoryGirl.create(:user) }
-      let(:valid_params) {{ service: "github", owner: "foo", name: "bar" }}
-      let(:private_params) {{ service: "github", owner: "pcorliss", name: "design_patterns" }}
-      let(:repo) { Repo.initialize_by_api(Hashie::Mash.new(valid_params)).save }
+
+      let(:repo) { FactoryGirl.build(:repo) }
+      let(:private_repo) { FactoryGirl.build(:private_key_repo) }
+
+      let(:valid_params) { repo.to_params }
+      let(:private_params) { private_repo.to_params }
+      let(:valid_api_params) { repo.to_api_params }
+      let(:private_api_params) { private_repo.to_api_params }
 
       before do
         session[:user_id] = user.id
-        repos = [Hashie::Mash.new(valid_params), Hashie::Mash.new(private_params)]
-        allow_any_instance_of(GitApi).to receive(:repos).and_return(repos)
+        repo_params = [valid_api_params, private_api_params]
+        allow_any_instance_of(GitApi).to receive(:repos).and_return(repo_params)
         allow_any_instance_of(GitApi).to receive(:github_add_key)
         allow_any_instance_of(GitApi).to receive(:deploy_key_exists?).and_return(false)
         allow_any_instance_of(GitApi).to receive(:add_new_webhook)
@@ -95,7 +143,7 @@ describe ReposController do
       end
 
       it "doesn't create a repo that already exists" do
-        repo
+        repo.save
         expect do
           post :create, repo: valid_params
         end.to_not change{Repo.count}
@@ -155,6 +203,12 @@ describe ReposController do
       it "redirects to the repo show page" do
         post :create, repo: valid_params
         expect(response).to redirect_to(repo_path Repo.last)
+      end
+
+      it "follows the repo" do
+        expect do
+          post :create, repo: valid_params
+        end.to change{UserRepo.count}.from(0).to(1)
       end
     end
   end
@@ -269,6 +323,96 @@ describe ReposController do
       it "returns a 200 for ping events" do
         post endpoint, ping_event_body, options.merge('X-GitHub-Event' => 'ping')
         expect(response).to have_http_status(:ok)
+      end
+    end
+  end
+
+  describe "#follow" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:repo) { FactoryGirl.create(:repo) }
+    let(:repo_params) { repo.to_params }
+    let(:repo_api_params) { repo.to_api_params }
+
+    context "signed out" do
+      it "redirects the user to sign in" do
+        post :follow, repo_params, id: repo
+        expect(flash[:error]).to eq(["Please log in"])
+        expect(response).to redirect_to(signin_auth_path)
+      end
+    end
+
+    context "signed in" do
+      before do
+        session[:user_id] = user.id
+        repos = [Hashie::Mash.new(repo_api_params)]
+        allow_any_instance_of(GitApi).to receive(:repos).and_return(repos)
+      end
+
+      context "unauthorized" do
+        it "returns a 404 if the user isn't authorized to view the repo" do
+          expect_any_instance_of(GitApi).to receive(:repos).and_return([])
+          expect do
+            post :follow, repo_params
+          end.to raise_error(ActionController::RoutingError)
+        end
+      end
+
+      context "authorized" do
+        it "creates a relationship between the user and the repo" do
+          expect do
+            post :follow, repo_params
+          end.to change{UserRepo.count}.from(0).to(1)
+        end
+
+        it "redirects to the repo show page" do
+          post :follow, repo_params
+          expect(response).to redirect_to(new_repo_path)
+        end
+      end
+    end
+  end
+
+  describe "#unfollow" do
+    let(:user) { FactoryGirl.create(:user, repos: [repo] ) }
+    let(:repo) { FactoryGirl.create(:repo) }
+    let(:repo_params) { repo.to_params }
+    let(:repo_api_params) { repo.to_api_params }
+
+    context "signed out" do
+      it "redirects the user to sign in" do
+        post :unfollow, repo_params, id: repo
+        expect(flash[:error]).to eq(["Please log in"])
+        expect(response).to redirect_to(signin_auth_path)
+      end
+    end
+
+    context "signed in" do
+      before do
+        session[:user_id] = user.id
+        repos = [Hashie::Mash.new(repo_api_params)]
+        allow_any_instance_of(GitApi).to receive(:repos).and_return(repos)
+      end
+
+      context "unauthorized" do
+        it "returns a 404 if the user isn't authorized to view the repo" do
+          expect_any_instance_of(GitApi).to receive(:repos).and_return([])
+          expect do
+            post :unfollow, repo_params
+          end.to raise_error(ActionController::RoutingError)
+        end
+      end
+
+      context "authorized" do
+        it "creates a relationship between the user and the repo" do
+          expect do
+            post :unfollow, repo_params
+          end.to change{UserRepo.count}.from(1).to(0)
+        end
+
+        it "redirects to the repo show page" do
+          post :unfollow, repo_params
+          expect(response).to redirect_to(new_repo_path)
+        end
       end
     end
   end

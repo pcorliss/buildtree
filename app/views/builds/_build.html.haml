@@ -1,0 +1,12 @@
+- repo = build.repo
+- path = builds_repos_path(service: repo.service, organization: repo.organization, name: repo.name, id: build.id)
+%tr
+  %td= link_to build.id, path
+  %td= link_to repo.short_name, repo_path(repo)
+  %td= link_to build.branch, path
+  %td= link_to build.short_sha, path
+  %td= link_to build.created_at, path
+  - if build.success?
+    %td.text-success= link_to fa_icon("check"), path
+  - else
+    %td.text-danger= link_to fa_icon("times"), path

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe User do
   context "validations" do
@@ -57,17 +57,6 @@ describe User do
         expect(user.secret).to eq(expected_secret)
       end
     end
-
-    #context "bitbucket" do
-      #let(:provider) { 'bitbucket' }
-      #let(:callback) { JSON.parse File.read("spec/fixtures/#{provider}_callback.json")}
-      #let(:expected_uid) { 'pcorliss' }
-      #let(:expected_token) { 'AAAAAAAAAAAAAAAAAA' }
-      #let(:expected_secret) { 'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB' }
-
-
-      #include_examples "finding and creating from auth_hash"
-    #end
 
     context "github" do
       let(:provider) { 'github' }

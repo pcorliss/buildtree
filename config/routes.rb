@@ -7,10 +7,12 @@ Rails.application.routes.draw do
     get ':provider/callback', action: :create, as: :callback
   end
 
-  resources :repos, only: [:new, :create, :show] do
+  resources :repos, constraints: { name: /[^\/]+/}, only: [:new, :create, :show] do
     collection do
       get ':service/:organization/:name', to: 'repos#show', as: 'long'
       post ':service/:organization/:name/webhook', to: 'repos#webhook', as: 'webhook'
+      post ':service/:organization/:name/follow', to: 'repos#follow', as: 'follow'
+      post ':service/:organization/:name/unfollow', to: 'repos#unfollow', as: 'unfollow'
       get ':service/:organization/:name/:id', to: 'builds#show', as: 'builds'
     end
   end

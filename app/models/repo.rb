@@ -1,10 +1,10 @@
 class Repo < ActiveRecord::Base
   has_many :builds
+  has_many :user_repos
+  has_many :users, through: :user_repos
 
   validates_presence_of :service, :organization, :name
-
   validates :service, inclusion: [ 'github' ]
-
   validates_uniqueness_of :name, scope: [:service, :organization]
 
   def external_url(*args)
@@ -35,15 +35,25 @@ class Repo < ActiveRecord::Base
   end
 
   def ==(other)
-    self.service == other.service &&
-    self.organization == other.organization &&
-    self.name == other.name
+    self.to_params == other.to_params
+
   end
 
   def fingerprint
     if self.private_key
       SSHKey.new(self.private_key, passphrase: ENV['SSH_PASSPHRASE']).fingerprint
     end
+  end
+
+  def to_params
+    self.slice(:service, :organization, :name)
+  end
+
+  def to_api_params
+    p = self.to_params
+    p[:owner] = p[:organization]
+    p.delete(:organization)
+    Hashie::Mash.new p
   end
 
   private

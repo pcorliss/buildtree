@@ -13,6 +13,10 @@ describe UsersController do
 
   describe "#show" do
     let(:user) { FactoryGirl.create(:user) }
+    let(:repo_a) { FactoryGirl.create(:repo, name: "a") }
+    let(:repo_b) { FactoryGirl.create(:repo, name: "b") }
+    let(:build_a) { FactoryGirl.create(:build, repo: repo_a) }
+    let(:build_b) { FactoryGirl.create(:build, repo: repo_b) }
 
     context "signed out" do
       it "redirects the user to sign in" do
@@ -41,15 +45,17 @@ describe UsersController do
 
       it "assigns other_user when accessed via id" do
         other_user = FactoryGirl.create(:user)
-        get :show, id: other_user.id
+        get :show, id: other_user
         expect(assigns(:user)).to eq(user)
         expect(assigns(:display_user)).to eq(other_user)
       end
 
-      it "assigns builds"
-
-      it "doesn't assign unfollowed projects builds"
-
+      it "assigns builds" do
+        expected_builds = [build_a, build_b].reverse # lazy loading
+        user.repos = [repo_a, repo_b]
+        get :show, id: user
+        expect(assigns(:builds)).to eq(expected_builds)
+      end
     end
   end
 end

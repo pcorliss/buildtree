@@ -28,16 +28,16 @@
   %legend Build Log
 
   - @build.build_logs.each do |log|
-    .bordered
-      .cmd
-        = log.cmd
-        = log.exit_code
+    - panel_class = log.exit_code == 0 ? "panel-success" : "panel-danger"
+    .panel{class: panel_class}
+      .panel-heading
+        %h5= log.cmd
 
-      .body
+      .panel-body
         - JSON.parse(log.text).each do |io_line|
           - type, line = io_line.first
           - if type == 'stdout'
-            %span.text-success= line
+            %span= line
             %br
           - else
             %span.text-danger= line

@@ -1,14 +1,18 @@
 class ReposController < ApplicationController
-  before_filter :require_session, only: [:new, :create, :show]
-  before_filter :load_repo, only: [:show, :webhook]
+  before_filter :require_session, only: [:new, :create, :show, :follow, :unfollow]
+  before_filter :load_repo, only: [:show, :webhook, :follow, :unfollow]
+  before_filter :require_repo_permissions, only: [:show, :follow, :unfollow]
   skip_before_filter :verify_authenticity_token, :only => [:webhook]
 
   def new
-    @repos = user_repos
+    @repos = user_repos.map do |repo|
+      Repo.find_or_initialize_by_api(Hashie::Mash.new(repo))
+    end
+    @followed_repos = Set.new(current_user.repos) & Set.new(@repos)
   end
 
   def create
-    repo = Repo.find_or_initialize_by_api(Hashie::Mash.new(params[:repo]))
+    repo = Repo.find_or_initialize_by(repo_params)
 
     unless authorized_for_repo?(repo)
       return redirect_with_error(new_repo_path, "You do not have rights to create this repo")
@@ -19,13 +23,13 @@ class ReposController < ApplicationController
     set_webhook!(git_api, repo)
 
     repo.save
+    current_user.repos << repo
     redirect_to repo_path(repo)
   rescue Octokit::NotFound
     redirect_with_error(new_repo_path, "You do not have rights to create this repo")
   end
 
   def show
-    require_repo_permissions
   end
 
   def webhook
@@ -46,7 +50,21 @@ class ReposController < ApplicationController
     render_422
   end
 
+  def follow
+    current_user.repos << @repo
+    redirect_to new_repo_path
+  end
+
+  def unfollow
+    current_user.repos.delete(@repo)
+    redirect_to new_repo_path
+  end
+
   private
+
+  def repo_params
+    params.require(:repo).permit(:service, :organization, :name)
+  end
 
   def webhook_sha(webhook_body)
     if webhook_body['head_commit']

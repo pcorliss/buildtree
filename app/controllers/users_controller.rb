@@ -7,5 +7,8 @@ class UsersController < ApplicationController
     else
       @display_user = User.find(params[:id])
     end
+
+    # This really needs to be paginated
+    @builds = Build.where(repo: @display_user.repos).order('id desc').includes(:repo)
   end
 end
