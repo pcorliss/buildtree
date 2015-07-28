@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  root 'home#index'
+
   resource :auth, only: [] do
     get :signin,  action: :new
     get :signout, action: :destroy

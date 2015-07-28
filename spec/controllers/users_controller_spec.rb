@@ -36,7 +36,20 @@ describe UsersController do
       it "assigns user when accessed via id" do
         get :show, id: user
         expect(assigns(:user)).to eq(user)
+        expect(assigns(:display_user)).to eq(user)
       end
+
+      it "assigns other_user when accessed via id" do
+        other_user = FactoryGirl.create(:user)
+        get :show, id: other_user.id
+        expect(assigns(:user)).to eq(user)
+        expect(assigns(:display_user)).to eq(other_user)
+      end
+
+      it "assigns builds"
+
+      it "doesn't assign unfollowed projects builds"
+
     end
   end
 end

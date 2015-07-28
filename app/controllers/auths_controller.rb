@@ -12,8 +12,7 @@ class AuthsController < ApplicationController
       session[:user_id] = @user.id
       flash[:success] ||= []
       flash[:success] << 'Signed In'
-      #redirect_to user_path(@user.slug)
-      redirect_to signin_auth_path
+      redirect_to user_path(@user)
     else
       flash[:error] ||= []
       flash[:error] << "Unable to login with #{params[:provider]}"

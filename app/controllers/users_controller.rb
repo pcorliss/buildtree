@@ -2,6 +2,10 @@ class UsersController < ApplicationController
   before_filter :require_session, only: [:show]
 
   def show
-    render json: {}
+    if current_user.id == params[:id]
+      @display_user = current_user
+    else
+      @display_user = User.find(params[:id])
+    end
   end
 end

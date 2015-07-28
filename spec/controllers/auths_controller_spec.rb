@@ -43,10 +43,11 @@ describe AuthsController do
         expect(user.reload.name).to eq('Philip Corliss')
       end
 
-      #it "redirects to the user dashboard" do
-        #get :create, provider: 'github'
-        #expect(response).to redirect_to(user_dashboard_path("#{provider}_#{uid}"))
-      #end
+      it "redirects to the user dashboard" do
+        user = User.find_or_create_from_auth_hash(callback)
+        get :create, provider: 'github'
+        expect(response).to redirect_to(user_path(user))
+      end
 
       it "sets the flash success" do
         get :create, provider: 'github'
