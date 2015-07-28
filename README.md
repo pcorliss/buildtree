@@ -1,35 +1,20 @@
 # BuildTree v2
 
+BuildTree is an open source continous integration service.
+
 ## Features
 
-### Needs
-- [x] Github Integration (Auth)
-- [x] Github Integration (WebHook)
-- [ ] Github Integration (Callbacks)
-- [x] Isolated Builds
-- [ ] Secrets
-- [ ] Code based configuration
+* Github OAuth integration
+* Github commits kick off builds
+* Builds are isolated from one another
+* Docker based build images
+* Code based configuration of builds
 
-### Wants
-- [ ] Display/Dashboards
-- [ ] Dependent Builds
-- [ ] Matrix Builds
-- [x] Docker based build images
-- [ ] Slack Notifications
-- [ ] Monorepo splits
-- [ ] Elastic Builds (Spin up Workers on demand)
+## Installation
 
-### Nice to Haves
-- [ ] Shared Configs
-- [ ] Build an arbitrary tag
-- [ ] Cache
-- [ ] Docker Registry
-- [ ] More Secure way of granting access
-- [ ] SSH Access to running docker image
-- [ ] Security between builds
-- [ ] Pull Request Security
+## Development
 
-#### TODOs before 0.1.0 release
+### TODOs before 0.1.0 release
 - [x] Flush user_repos cache every 24 hours
 - [ ] a usable UI
   - [x] Create page - point click
@@ -41,14 +26,31 @@
   - [ ] user dash
     - [ ] Root redirects to user dash
     - [ ] Root redirects to signup if you're not signed in
-    - [ ] A resync user permissions button
+    - [ ] Fix other redirects
   - [ ] repo#new should note which repos are already in the system
   - [ ] Build Head button on repo show
 - [ ] Construct a shell script from a config file
 - [ ] Check out a specific SHA, not just the head of the branch
+- [ ] Github Integration (Callbacks)
+- [ ] Run docker within docker
+- [ ] Installation documentation
+
+#### TODOs for future releases
 - [ ] Setup Websocket communication between front-end and builder
 - [ ] Setup Websocket communication between front-end and client
 - [ ] Save logs to S3 instead of the DB
+- [ ] A resync user permissions button
 - [ ] Create a repo query event which enques a build on repo creation.
 - [ ] Destroy docker instance after running
 - [ ] add pagination repos show
+- [ ] Secrets
+- [ ] Dependent Builds
+- [ ] Matrix Builds
+- [ ] Slack Notifications
+- [ ] Elastic Builds (Spin up Workers on demand)
+- [ ] Caching of dependencies cache
+- [ ] Docker Registry
+- [ ] SSH Access to running docker image
+- [ ] Pull Request Security
+- [ ] Fine-Grained Security support, view vs. create vs. admin
+- [ ] Build isolation security work
