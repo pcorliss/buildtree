@@ -41,6 +41,12 @@ describe BuildJob do
       build_job.perform
     end
 
+    it "executes a git checkout to the specified SHA" do
+      expected_git_co_cmd = "cd #{tmpdir}/source && git checkout ffcaf395a6bb110182d357cebb4b9b49e34b6394"
+      expect(build_job).to receive(:system_cmd).with(expected_git_co_cmd)
+      build_job.perform
+    end
+
     it "runs docker container" do
       expected_docker_cmd = "docker run -i -v #{tmpdir}:/var/ci ubuntu:14.04 /var/ci/source/ci.sh"
       expect(build_job).to receive(:system_cmd).with(expected_docker_cmd)

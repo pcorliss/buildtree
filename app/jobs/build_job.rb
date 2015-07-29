@@ -11,6 +11,7 @@ class BuildJob
     tmpdir do |dir|
       write_private_key(dir)
       git_clone(dir)
+      git_co(dir)
       process = run_docker_container(dir)
       @build.success = (process.exitstatus == 0)
       @build.save
@@ -33,6 +34,10 @@ class BuildJob
 
   def git_clone(dir)
     system_cmd("git clone #{@repo.git_url} --branch #{@build.branch} --single-branch --depth 10 #{dir}/source")
+  end
+
+  def git_co(dir)
+    system_cmd("cd #{dir}/source && git checkout #{@build.sha}")
   end
 
   def run_docker_container(dir)
