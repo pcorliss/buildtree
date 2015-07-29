@@ -1,0 +1,44 @@
+--- !ruby/object:Sawyer::Resource
+attrs:
+  :ref: refs/heads/master
+  :url: https://api.github.com/repos/pcorliss/buildtree/git/refs/heads/master
+  :object: !ruby/object:Sawyer::Resource
+    attrs:
+      :sha: d82d4aaaf1ad77e5e41c6baac143817f89f48506
+      :type: commit
+      :url: https://api.github.com/repos/pcorliss/buildtree/git/commits/d82d4aaaf1ad77e5e41c6baac143817f89f48506
+    _fields: !ruby/object:Set
+      hash:
+        :sha: true
+        :type: true
+        :url: true
+    _rels: !ruby/object:Sawyer::Relation::Map
+      map:
+        :self: !ruby/object:Sawyer::Relation
+          agent: &1 !ruby/object:Sawyer::Agent
+            endpoint: https://api.github.com/
+          name: :self
+          href: https://api.github.com/repos/pcorliss/buildtree/git/commits/d82d4aaaf1ad77e5e41c6baac143817f89f48506
+          href_template: !ruby/object:Addressable::Template
+            pattern: https://api.github.com/repos/pcorliss/buildtree/git/commits/d82d4aaaf1ad77e5e41c6baac143817f89f48506
+          method: :get
+          available_methods: !ruby/object:Set
+            hash:
+              :get: true
+_fields: !ruby/object:Set
+  hash:
+    :ref: true
+    :url: true
+    :object: true
+_rels: !ruby/object:Sawyer::Relation::Map
+  map:
+    :self: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :self
+      href: https://api.github.com/repos/pcorliss/buildtree/git/refs/heads/master
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/git/refs/heads/master
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true

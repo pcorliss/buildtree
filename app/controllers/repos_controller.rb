@@ -1,7 +1,7 @@
 class ReposController < ApplicationController
-  before_filter :require_session, only: [:new, :create, :show, :follow, :unfollow]
-  before_filter :load_repo, only: [:show, :webhook, :follow, :unfollow]
-  before_filter :require_repo_permissions, only: [:show, :follow, :unfollow]
+  before_filter :require_session, only: [:new, :create, :show, :follow, :unfollow, :build]
+  before_filter :load_repo, only: [:show, :webhook, :follow, :unfollow, :build]
+  before_filter :require_repo_permissions, only: [:show, :follow, :unfollow, :build]
   skip_before_filter :verify_authenticity_token, :only => [:webhook]
 
   def new
@@ -43,7 +43,8 @@ class ReposController < ApplicationController
 
     return render_422 unless sha.present? && branch.present?
     unless @repo.builds.exists?(branch: branch, sha: sha)
-      @repo.builds.create(branch: branch, sha: sha)
+      build = @repo.builds.create(branch: branch, sha: sha)
+      build.enqueue!
     end
     render :json => {}
   rescue JSON::ParserError
@@ -58,6 +59,15 @@ class ReposController < ApplicationController
   def unfollow
     current_user.repos.delete(@repo)
     redirect_to new_repo_path
+  end
+
+  def build
+    git_api = GitApi.new(current_user)
+    branch = git_api.default_branch(@repo.short_name)
+    sha = git_api.head_sha(@repo.short_name, branch)
+    build = @repo.builds.create(branch: branch, sha: sha)
+    build.enqueue!
+    redirect_to build_repos_path(@repo.to_params.merge(id: build))
   end
 
   private

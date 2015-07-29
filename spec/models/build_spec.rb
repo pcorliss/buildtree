@@ -13,4 +13,11 @@ describe Build do
       expect(build.short_sha).to be_nil
     end
   end
+
+  describe "#enqueue!" do
+    it "should enqueue a build job" do
+      expect_any_instance_of(BuildJob).to receive(:perform)
+      build.enqueue!
+    end
+  end
 end

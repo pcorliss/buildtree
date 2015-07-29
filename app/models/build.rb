@@ -5,4 +5,8 @@ class Build < ActiveRecord::Base
   def short_sha
     self.sha.first(7) if self.sha
   end
+
+  def enqueue!
+    Delayed::Job.enqueue BuildJob.new(self)
+  end
 end

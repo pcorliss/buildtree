@@ -3,11 +3,6 @@
 
   %legend Create Repo
 
-  -#%ul
-    - @repos.each do |repo|
-      %li
-        = button_to "#{"Follow::" unless repo.new_record?}#{repo.organization}/#{repo.name}", repos_path, method: :post, params: {'[repo]service' => repo.service, '[repo]owner' => repo.organization, '[repo]name' => repo.name}
-
   %table.table.table-striped.table-hover.no-highlights
     %tr
       %th Service
@@ -32,5 +27,3 @@
             = button_to "Unfollow", unfollow_repos_path(repo.to_params.symbolize_keys), method: :post, class: 'btn btn-warning btn-xs'
           - else
             = button_to "Follow", follow_repos_path(repo.to_params.symbolize_keys), method: :post, class: 'btn btn-primary btn-xs'
-
-

@@ -1,0 +1,727 @@
+--- !ruby/object:Sawyer::Resource
+attrs:
+  :id: 39736547
+  :name: buildtree
+  :full_name: pcorliss/buildtree
+  :owner: !ruby/object:Sawyer::Resource
+    attrs:
+      :login: pcorliss
+      :id: 141914
+      :avatar_url: https://avatars.githubusercontent.com/u/141914?v=3
+      :gravatar_id: ''
+      :url: https://api.github.com/users/pcorliss
+      :html_url: https://github.com/pcorliss
+      :followers_url: https://api.github.com/users/pcorliss/followers
+      :following_url: https://api.github.com/users/pcorliss/following{/other_user}
+      :gists_url: https://api.github.com/users/pcorliss/gists{/gist_id}
+      :starred_url: https://api.github.com/users/pcorliss/starred{/owner}{/repo}
+      :subscriptions_url: https://api.github.com/users/pcorliss/subscriptions
+      :organizations_url: https://api.github.com/users/pcorliss/orgs
+      :repos_url: https://api.github.com/users/pcorliss/repos
+      :events_url: https://api.github.com/users/pcorliss/events{/privacy}
+      :received_events_url: https://api.github.com/users/pcorliss/received_events
+      :type: User
+      :site_admin: false
+    _fields: !ruby/object:Set
+      hash:
+        :login: true
+        :id: true
+        :avatar_url: true
+        :gravatar_id: true
+        :url: true
+        :html_url: true
+        :followers_url: true
+        :following_url: true
+        :gists_url: true
+        :starred_url: true
+        :subscriptions_url: true
+        :organizations_url: true
+        :repos_url: true
+        :events_url: true
+        :received_events_url: true
+        :type: true
+        :site_admin: true
+    _rels: !ruby/object:Sawyer::Relation::Map
+      map:
+        :avatar: !ruby/object:Sawyer::Relation
+          agent: &1 !ruby/object:Sawyer::Agent
+            endpoint: https://api.github.com/
+          name: :avatar
+          href: https://avatars.githubusercontent.com/u/141914?v=3
+          href_template: !ruby/object:Addressable::Template
+            pattern: https://avatars.githubusercontent.com/u/141914?v=3
+          method: :get
+          available_methods: !ruby/object:Set
+            hash:
+              :get: true
+        :self: !ruby/object:Sawyer::Relation
+          agent: *1
+          name: :self
+          href: https://api.github.com/users/pcorliss
+          href_template: !ruby/object:Addressable::Template
+            pattern: https://api.github.com/users/pcorliss
+          method: :get
+          available_methods: !ruby/object:Set
+            hash:
+              :get: true
+        :html: !ruby/object:Sawyer::Relation
+          agent: *1
+          name: :html
+          href: https://github.com/pcorliss
+          href_template: !ruby/object:Addressable::Template
+            pattern: https://github.com/pcorliss
+          method: :get
+          available_methods: !ruby/object:Set
+            hash:
+              :get: true
+        :followers: !ruby/object:Sawyer::Relation
+          agent: *1
+          name: :followers
+          href: https://api.github.com/users/pcorliss/followers
+          href_template: !ruby/object:Addressable::Template
+            pattern: https://api.github.com/users/pcorliss/followers
+          method: :get
+          available_methods: !ruby/object:Set
+            hash:
+              :get: true
+        :following: !ruby/object:Sawyer::Relation
+          agent: *1
+          name: :following
+          href: https://api.github.com/users/pcorliss/following{/other_user}
+          href_template: !ruby/object:Addressable::Template
+            pattern: https://api.github.com/users/pcorliss/following{/other_user}
+          method: :get
+          available_methods: !ruby/object:Set
+            hash:
+              :get: true
+        :gists: !ruby/object:Sawyer::Relation
+          agent: *1
+          name: :gists
+          href: https://api.github.com/users/pcorliss/gists{/gist_id}
+          href_template: !ruby/object:Addressable::Template
+            pattern: https://api.github.com/users/pcorliss/gists{/gist_id}
+          method: :get
+          available_methods: !ruby/object:Set
+            hash:
+              :get: true
+        :starred: !ruby/object:Sawyer::Relation
+          agent: *1
+          name: :starred
+          href: https://api.github.com/users/pcorliss/starred{/owner}{/repo}
+          href_template: !ruby/object:Addressable::Template
+            pattern: https://api.github.com/users/pcorliss/starred{/owner}{/repo}
+          method: :get
+          available_methods: !ruby/object:Set
+            hash:
+              :get: true
+        :subscriptions: !ruby/object:Sawyer::Relation
+          agent: *1
+          name: :subscriptions
+          href: https://api.github.com/users/pcorliss/subscriptions
+          href_template: !ruby/object:Addressable::Template
+            pattern: https://api.github.com/users/pcorliss/subscriptions
+          method: :get
+          available_methods: !ruby/object:Set
+            hash:
+              :get: true
+        :organizations: !ruby/object:Sawyer::Relation
+          agent: *1
+          name: :organizations
+          href: https://api.github.com/users/pcorliss/orgs
+          href_template: !ruby/object:Addressable::Template
+            pattern: https://api.github.com/users/pcorliss/orgs
+          method: :get
+          available_methods: !ruby/object:Set
+            hash:
+              :get: true
+        :repos: !ruby/object:Sawyer::Relation
+          agent: *1
+          name: :repos
+          href: https://api.github.com/users/pcorliss/repos
+          href_template: !ruby/object:Addressable::Template
+            pattern: https://api.github.com/users/pcorliss/repos
+          method: :get
+          available_methods: !ruby/object:Set
+            hash:
+              :get: true
+        :events: !ruby/object:Sawyer::Relation
+          agent: *1
+          name: :events
+          href: https://api.github.com/users/pcorliss/events{/privacy}
+          href_template: !ruby/object:Addressable::Template
+            pattern: https://api.github.com/users/pcorliss/events{/privacy}
+          method: :get
+          available_methods: !ruby/object:Set
+            hash:
+              :get: true
+        :received_events: !ruby/object:Sawyer::Relation
+          agent: *1
+          name: :received_events
+          href: https://api.github.com/users/pcorliss/received_events
+          href_template: !ruby/object:Addressable::Template
+            pattern: https://api.github.com/users/pcorliss/received_events
+          method: :get
+          available_methods: !ruby/object:Set
+            hash:
+              :get: true
+  :private: false
+  :html_url: https://github.com/pcorliss/buildtree
+  :description: Buildtree - Docker based CI
+  :fork: false
+  :url: https://api.github.com/repos/pcorliss/buildtree
+  :forks_url: https://api.github.com/repos/pcorliss/buildtree/forks
+  :keys_url: https://api.github.com/repos/pcorliss/buildtree/keys{/key_id}
+  :collaborators_url: https://api.github.com/repos/pcorliss/buildtree/collaborators{/collaborator}
+  :teams_url: https://api.github.com/repos/pcorliss/buildtree/teams
+  :hooks_url: https://api.github.com/repos/pcorliss/buildtree/hooks
+  :issue_events_url: https://api.github.com/repos/pcorliss/buildtree/issues/events{/number}
+  :events_url: https://api.github.com/repos/pcorliss/buildtree/events
+  :assignees_url: https://api.github.com/repos/pcorliss/buildtree/assignees{/user}
+  :branches_url: https://api.github.com/repos/pcorliss/buildtree/branches{/branch}
+  :tags_url: https://api.github.com/repos/pcorliss/buildtree/tags
+  :blobs_url: https://api.github.com/repos/pcorliss/buildtree/git/blobs{/sha}
+  :git_tags_url: https://api.github.com/repos/pcorliss/buildtree/git/tags{/sha}
+  :git_refs_url: https://api.github.com/repos/pcorliss/buildtree/git/refs{/sha}
+  :trees_url: https://api.github.com/repos/pcorliss/buildtree/git/trees{/sha}
+  :statuses_url: https://api.github.com/repos/pcorliss/buildtree/statuses/{sha}
+  :languages_url: https://api.github.com/repos/pcorliss/buildtree/languages
+  :stargazers_url: https://api.github.com/repos/pcorliss/buildtree/stargazers
+  :contributors_url: https://api.github.com/repos/pcorliss/buildtree/contributors
+  :subscribers_url: https://api.github.com/repos/pcorliss/buildtree/subscribers
+  :subscription_url: https://api.github.com/repos/pcorliss/buildtree/subscription
+  :commits_url: https://api.github.com/repos/pcorliss/buildtree/commits{/sha}
+  :git_commits_url: https://api.github.com/repos/pcorliss/buildtree/git/commits{/sha}
+  :comments_url: https://api.github.com/repos/pcorliss/buildtree/comments{/number}
+  :issue_comment_url: https://api.github.com/repos/pcorliss/buildtree/issues/comments{/number}
+  :contents_url: https://api.github.com/repos/pcorliss/buildtree/contents/{+path}
+  :compare_url: https://api.github.com/repos/pcorliss/buildtree/compare/{base}...{head}
+  :merges_url: https://api.github.com/repos/pcorliss/buildtree/merges
+  :archive_url: https://api.github.com/repos/pcorliss/buildtree/{archive_format}{/ref}
+  :downloads_url: https://api.github.com/repos/pcorliss/buildtree/downloads
+  :issues_url: https://api.github.com/repos/pcorliss/buildtree/issues{/number}
+  :pulls_url: https://api.github.com/repos/pcorliss/buildtree/pulls{/number}
+  :milestones_url: https://api.github.com/repos/pcorliss/buildtree/milestones{/number}
+  :notifications_url: https://api.github.com/repos/pcorliss/buildtree/notifications{?since,all,participating}
+  :labels_url: https://api.github.com/repos/pcorliss/buildtree/labels{/name}
+  :releases_url: https://api.github.com/repos/pcorliss/buildtree/releases{/id}
+  :created_at: 2015-07-26 18:25:17.000000000 Z
+  :updated_at: 2015-07-26 18:25:51.000000000 Z
+  :pushed_at: 2015-07-28 05:24:19.000000000 Z
+  :git_url: git://github.com/pcorliss/buildtree.git
+  :ssh_url: git@github.com:pcorliss/buildtree.git
+  :clone_url: https://github.com/pcorliss/buildtree.git
+  :svn_url: https://github.com/pcorliss/buildtree
+  :homepage: 
+  :size: 0
+  :stargazers_count: 0
+  :watchers_count: 0
+  :language: Ruby
+  :has_issues: true
+  :has_downloads: true
+  :has_wiki: true
+  :has_pages: false
+  :forks_count: 0
+  :mirror_url: 
+  :open_issues_count: 0
+  :forks: 0
+  :open_issues: 0
+  :watchers: 0
+  :default_branch: master
+  :permissions: !ruby/object:Sawyer::Resource
+    attrs:
+      :admin: true
+      :push: true
+      :pull: true
+    _fields: !ruby/object:Set
+      hash:
+        :admin: true
+        :push: true
+        :pull: true
+    _rels: !ruby/object:Sawyer::Relation::Map
+      map: {}
+  :network_count: 0
+  :subscribers_count: 0
+_fields: !ruby/object:Set
+  hash:
+    :id: true
+    :name: true
+    :full_name: true
+    :owner: true
+    :private: true
+    :html_url: true
+    :description: true
+    :fork: true
+    :url: true
+    :forks_url: true
+    :keys_url: true
+    :collaborators_url: true
+    :teams_url: true
+    :hooks_url: true
+    :issue_events_url: true
+    :events_url: true
+    :assignees_url: true
+    :branches_url: true
+    :tags_url: true
+    :blobs_url: true
+    :git_tags_url: true
+    :git_refs_url: true
+    :trees_url: true
+    :statuses_url: true
+    :languages_url: true
+    :stargazers_url: true
+    :contributors_url: true
+    :subscribers_url: true
+    :subscription_url: true
+    :commits_url: true
+    :git_commits_url: true
+    :comments_url: true
+    :issue_comment_url: true
+    :contents_url: true
+    :compare_url: true
+    :merges_url: true
+    :archive_url: true
+    :downloads_url: true
+    :issues_url: true
+    :pulls_url: true
+    :milestones_url: true
+    :notifications_url: true
+    :labels_url: true
+    :releases_url: true
+    :created_at: true
+    :updated_at: true
+    :pushed_at: true
+    :git_url: true
+    :ssh_url: true
+    :clone_url: true
+    :svn_url: true
+    :homepage: true
+    :size: true
+    :stargazers_count: true
+    :watchers_count: true
+    :language: true
+    :has_issues: true
+    :has_downloads: true
+    :has_wiki: true
+    :has_pages: true
+    :forks_count: true
+    :mirror_url: true
+    :open_issues_count: true
+    :forks: true
+    :open_issues: true
+    :watchers: true
+    :default_branch: true
+    :permissions: true
+    :network_count: true
+    :subscribers_count: true
+_rels: !ruby/object:Sawyer::Relation::Map
+  map:
+    :html: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :html
+      href: https://github.com/pcorliss/buildtree
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://github.com/pcorliss/buildtree
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :self: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :self
+      href: https://api.github.com/repos/pcorliss/buildtree
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :forks: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :forks
+      href: https://api.github.com/repos/pcorliss/buildtree/forks
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/forks
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :keys: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :keys
+      href: https://api.github.com/repos/pcorliss/buildtree/keys{/key_id}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/keys{/key_id}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :collaborators: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :collaborators
+      href: https://api.github.com/repos/pcorliss/buildtree/collaborators{/collaborator}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/collaborators{/collaborator}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :teams: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :teams
+      href: https://api.github.com/repos/pcorliss/buildtree/teams
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/teams
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :hooks: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :hooks
+      href: https://api.github.com/repos/pcorliss/buildtree/hooks
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/hooks
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :issue_events: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :issue_events
+      href: https://api.github.com/repos/pcorliss/buildtree/issues/events{/number}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/issues/events{/number}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :events: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :events
+      href: https://api.github.com/repos/pcorliss/buildtree/events
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/events
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :assignees: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :assignees
+      href: https://api.github.com/repos/pcorliss/buildtree/assignees{/user}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/assignees{/user}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :branches: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :branches
+      href: https://api.github.com/repos/pcorliss/buildtree/branches{/branch}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/branches{/branch}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :tags: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :tags
+      href: https://api.github.com/repos/pcorliss/buildtree/tags
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/tags
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :blobs: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :blobs
+      href: https://api.github.com/repos/pcorliss/buildtree/git/blobs{/sha}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/git/blobs{/sha}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :git_tags: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :git_tags
+      href: https://api.github.com/repos/pcorliss/buildtree/git/tags{/sha}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/git/tags{/sha}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :git_refs: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :git_refs
+      href: https://api.github.com/repos/pcorliss/buildtree/git/refs{/sha}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/git/refs{/sha}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :trees: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :trees
+      href: https://api.github.com/repos/pcorliss/buildtree/git/trees{/sha}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/git/trees{/sha}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :statuses: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :statuses
+      href: https://api.github.com/repos/pcorliss/buildtree/statuses/{sha}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/statuses/{sha}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :languages: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :languages
+      href: https://api.github.com/repos/pcorliss/buildtree/languages
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/languages
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :stargazers: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :stargazers
+      href: https://api.github.com/repos/pcorliss/buildtree/stargazers
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/stargazers
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :contributors: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :contributors
+      href: https://api.github.com/repos/pcorliss/buildtree/contributors
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/contributors
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :subscribers: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :subscribers
+      href: https://api.github.com/repos/pcorliss/buildtree/subscribers
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/subscribers
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :subscription: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :subscription
+      href: https://api.github.com/repos/pcorliss/buildtree/subscription
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/subscription
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :commits: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :commits
+      href: https://api.github.com/repos/pcorliss/buildtree/commits{/sha}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/commits{/sha}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :git_commits: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :git_commits
+      href: https://api.github.com/repos/pcorliss/buildtree/git/commits{/sha}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/git/commits{/sha}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :comments: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :comments
+      href: https://api.github.com/repos/pcorliss/buildtree/comments{/number}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/comments{/number}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :issue_comment: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :issue_comment
+      href: https://api.github.com/repos/pcorliss/buildtree/issues/comments{/number}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/issues/comments{/number}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :contents: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :contents
+      href: https://api.github.com/repos/pcorliss/buildtree/contents/{+path}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/contents/{+path}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :compare: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :compare
+      href: https://api.github.com/repos/pcorliss/buildtree/compare/{base}...{head}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/compare/{base}...{head}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :merges: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :merges
+      href: https://api.github.com/repos/pcorliss/buildtree/merges
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/merges
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :archive: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :archive
+      href: https://api.github.com/repos/pcorliss/buildtree/{archive_format}{/ref}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/{archive_format}{/ref}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :downloads: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :downloads
+      href: https://api.github.com/repos/pcorliss/buildtree/downloads
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/downloads
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :issues: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :issues
+      href: https://api.github.com/repos/pcorliss/buildtree/issues{/number}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/issues{/number}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :pulls: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :pulls
+      href: https://api.github.com/repos/pcorliss/buildtree/pulls{/number}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/pulls{/number}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :milestones: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :milestones
+      href: https://api.github.com/repos/pcorliss/buildtree/milestones{/number}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/milestones{/number}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :notifications: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :notifications
+      href: https://api.github.com/repos/pcorliss/buildtree/notifications{?since,all,participating}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/notifications{?since,all,participating}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :labels: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :labels
+      href: https://api.github.com/repos/pcorliss/buildtree/labels{/name}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/labels{/name}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :releases: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :releases
+      href: https://api.github.com/repos/pcorliss/buildtree/releases{/id}
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://api.github.com/repos/pcorliss/buildtree/releases{/id}
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :git: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :git
+      href: git://github.com/pcorliss/buildtree.git
+      href_template: !ruby/object:Addressable::Template
+        pattern: git://github.com/pcorliss/buildtree.git
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :ssh: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :ssh
+      href: git@github.com:pcorliss/buildtree.git
+      href_template: !ruby/object:Addressable::Template
+        pattern: git@github.com:pcorliss/buildtree.git
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :clone: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :clone
+      href: https://github.com/pcorliss/buildtree.git
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://github.com/pcorliss/buildtree.git
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true
+    :svn: !ruby/object:Sawyer::Relation
+      agent: *1
+      name: :svn
+      href: https://github.com/pcorliss/buildtree
+      href_template: !ruby/object:Addressable::Template
+        pattern: https://github.com/pcorliss/buildtree
+      method: :get
+      available_methods: !ruby/object:Set
+        hash:
+          :get: true

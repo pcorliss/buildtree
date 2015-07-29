@@ -58,6 +58,16 @@ describe ReposController do
       )
     end
 
+    it "routes to #build" do
+      expect(post: "/repos/github/foo/bar/build").to route_to(
+        :controller => "repos",
+        :action => "build",
+        :service => "github",
+        :organization => "foo",
+        :name => "bar",
+      )
+    end
+
     it "handles names with periods in them" do
       expect(get: "/repos/github/foo/bar.foo").to route_to(
         :controller => "repos",
@@ -279,6 +289,7 @@ describe ReposController do
     context "with a repo" do
       before do
         repo
+        allow_any_instance_of(Build).to receive(:enqueue!)
       end
 
       it "creates a build when it receives a push event" do
@@ -291,6 +302,11 @@ describe ReposController do
         expect do
           post endpoint, pr_event_body, options
         end.to change{Build.count}.from(0).to(1)
+      end
+
+      it "enqueues a build job" do
+        expect_any_instance_of(Build).to receive(:enqueue!)
+        post endpoint, pr_event_body, options
       end
 
       it "does not create a build when it receives an event with a duplicate repo branch and sha" do
@@ -412,6 +428,63 @@ describe ReposController do
         it "redirects to the repo show page" do
           post :unfollow, repo_params
           expect(response).to redirect_to(new_repo_path)
+        end
+      end
+    end
+  end
+
+  describe "#build" do
+    let(:user) { FactoryGirl.create(:user, repos: [repo] ) }
+    let(:repo) { FactoryGirl.create(:repo) }
+    let(:repo_params) { repo.to_params }
+    let(:repo_api_params) { repo.to_api_params }
+
+    context "signed out" do
+      it "redirects the user to sign in" do
+        post :build, repo_params, id: repo
+        expect(flash[:error]).to eq(["Please log in"])
+        expect(response).to redirect_to(signin_auth_path)
+      end
+    end
+
+    context "signed in" do
+      before do
+        session[:user_id] = user.id
+        repos = [Hashie::Mash.new(repo_api_params)]
+        allow_any_instance_of(GitApi).to receive(:repos).and_return(repos)
+      end
+
+      context "unauthorized" do
+        it "returns a 404 if the user isn't authorized to view the repo" do
+          expect_any_instance_of(GitApi).to receive(:repos).and_return([])
+          expect do
+            post :build, repo_params
+          end.to raise_error(ActionController::RoutingError)
+        end
+      end
+
+      context "authorized" do
+        before do
+          allow_any_instance_of(GitApi).to receive(:default_branch).and_return("master")
+          allow_any_instance_of(GitApi).to receive(:head_sha).and_return("a"*40)
+          allow_any_instance_of(Build).to receive(:enqueue!)
+        end
+
+        it "creates a build" do
+          expect do
+            post :build, repo_params
+          end.to change{repo.builds.count}.from(0).to(1)
+        end
+
+        it "enqueues a build job" do
+          expect_any_instance_of(Build).to receive(:enqueue!)
+          post :build, repo_params
+        end
+
+        it "redirects to the build show page" do
+          post :build, repo_params
+          last_build = Build.last
+          expect(response).to redirect_to(build_repos_path(repo_params.merge(id: last_build)))
         end
       end
     end

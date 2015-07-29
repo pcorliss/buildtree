@@ -70,6 +70,14 @@ class GitApi
     end
   end
 
+  def default_branch(repo)
+    @source.repository(repo).default_branch
+  end
+
+  def head_sha(repo, branch)
+    @source.ref(repo, "heads/#{branch}").object.sha
+  end
+
   private
 
   def github_deploy_keys(owner, name)

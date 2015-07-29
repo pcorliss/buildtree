@@ -160,4 +160,35 @@ describe GitApi do
       end
     end
   end
+
+  context "#default_branch" do
+    let(:repository_fixture) do
+      repository = YAML.load_file "spec/fixtures/github_repository.yml"
+      repository.instance_variable_set("@_metaclass", Sawyer::Resource)
+      repository
+    end
+
+    let(:api) { GitApi.new(github_user) }
+
+    it "returns the default branch" do
+      expect_any_instance_of(Octokit::Client).to receive(:repository).with("foo/bar").and_return(repository_fixture)
+      expect(api.default_branch("foo/bar")).to eq('master')
+    end
+  end
+
+  context "#head_sha" do
+    let(:ref_fixture) do
+      ref = YAML.load_file "spec/fixtures/github_ref.yml"
+      ref.instance_variable_set("@_metaclass", Sawyer::Resource)
+      ref.object.instance_variable_set("@_metaclass", Sawyer::Resource)
+      ref
+    end
+
+    let(:api) { GitApi.new(github_user) }
+
+    it "returns the sha on the default branch" do
+      expect_any_instance_of(Octokit::Client).to receive(:ref).with("foo/bar", "heads/master").and_return(ref_fixture)
+      expect(api.head_sha("foo/bar", "master")).to eq('d82d4aaaf1ad77e5e41c6baac143817f89f48506')
+    end
+  end
 end
