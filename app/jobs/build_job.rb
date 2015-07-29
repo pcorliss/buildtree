@@ -13,6 +13,7 @@ class BuildJob
       git_clone(dir)
       process = run_docker_container(dir)
       @build.success = (process.exitstatus == 0)
+      @build.save
       #`cp -pr #{dir} tmp/`
     end
   end

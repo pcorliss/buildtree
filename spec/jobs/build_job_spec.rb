@@ -58,5 +58,10 @@ describe BuildJob do
       build_job.perform
       expect(build.success?).to be_falsey
     end
+
+    it "saves the build" do
+      build_job.perform
+      expect(build.new_record?).to be_falsey
+    end
   end
 end

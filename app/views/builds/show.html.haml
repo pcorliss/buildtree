@@ -17,7 +17,9 @@
     %dd= @build.created_at
 
     %dt Success
-    - if @build.success?
+    - if @build.success.nil?
+      %dd= fa_icon "question"
+    - elsif @build.success?
       %dd.text-success= fa_icon "check"
     - else
       %dd.text-danger= fa_icon "times"

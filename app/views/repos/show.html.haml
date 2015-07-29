@@ -4,5 +4,6 @@
   %legend Repo Show
 
   = link_to @repo.external_url, @repo.external_url
+  = button_to "Build Head", build_head_repos_path(@repo.to_params), method: :post, class: 'btn btn-success btn-xs'
 
   = render "builds/collection", builds: @repo.builds.reverse

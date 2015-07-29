@@ -67,7 +67,7 @@ class ReposController < ApplicationController
     sha = git_api.head_sha(@repo.short_name, branch)
     build = @repo.builds.create(branch: branch, sha: sha)
     build.enqueue!
-    redirect_to build_repos_path(@repo.to_params.merge(id: build))
+    redirect_to build_repos_path(@repo.to_params.merge(id: build).symbolize_keys)
   end
 
   private

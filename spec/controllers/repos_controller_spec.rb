@@ -484,7 +484,9 @@ describe ReposController do
         it "redirects to the build show page" do
           post :build, repo_params
           last_build = Build.last
-          expect(response).to redirect_to(build_repos_path(repo_params.merge(id: last_build)))
+          path_params = repo_params.merge(id: last_build).symbolize_keys
+          expected_path = build_repos_path(path_params)
+          expect(response).to redirect_to(expected_path)
         end
       end
     end
