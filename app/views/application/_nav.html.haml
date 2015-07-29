@@ -1,0 +1,22 @@
+.navbar.navbar-default.navbar-static-top{role: 'navigation'}
+  .container-fluid
+    .navbar-header
+      %button.navbar-toggle{'data-toggle' => 'collapse', 'data-target' => '.navbar-collapse'}
+        %span.sr-only Toggle navigation
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      = link_to root_path, class: 'navbar-brand' do
+        -#Swanky Logo Goes Here
+        BT
+    .navbar-collapse.collapse
+      %ul.nav.navbar-nav.navbar-right
+        - if current_user
+          %li= link_to 'Dashboard', user_path(current_user)
+          %li= link_to 'AddRepo', new_repo_path
+          %li= link_to 'Sign Out', signout_auth_path
+          %li
+            = link_to user_path(current_user), class: 'nav-image' do
+              = image_tag current_user.avatar, class: 'img-circle'
+        - else
+          %li= link_to 'Sign In', signin_auth_path

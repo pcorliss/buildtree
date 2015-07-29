@@ -16,7 +16,7 @@ BuildTree is an open source continous integration service.
 
 ### TODOs before 0.1.0 release
 - [x] Flush user_repos cache every 24 hours
-- [ ] a usable UI
+- [x] a usable UI
   - [x] Create page - point click
   - [x] Repo show page
     - [x] Colored dots
@@ -28,8 +28,8 @@ BuildTree is an open source continous integration service.
     - [x] Root redirects to signup if you're not signed in
     - [x] Fix other redirects
   - [x] repo#new should note which repos are already in the system
-  - [ ] Build Head button on repo show
-  - [ ] Nav (SignIn/Out, Dashboard, Add Repo)
+  - [x] Build Head button on repo show
+  - [x] Nav (SignIn/Out, Dashboard, Add Repo)
 - [ ] Construct a shell script from a config file
 - [ ] Check out a specific SHA, not just the head of the branch
 - [ ] Github Integration (Callbacks)
@@ -44,6 +44,7 @@ BuildTree is an open source continous integration service.
 - [ ] Create a repo query event which enques a build on repo creation.
 - [ ] Destroy docker instance after running
 - [ ] add pagination repos show
+- [ ] UI Breadcrumbs
 - [ ] Secrets
 - [ ] Dependent Builds
 - [ ] Matrix Builds
