@@ -1,0 +1,32 @@
+docker_image: "ubuntu:15.10"
+env:
+  FOO: foo
+  BAR: bar
+packages:
+- curl
+- wget
+package_setup:
+- "some_cmd foo bar buzz"
+- "some_other_cmd"
+services:
+- cassandra
+- docker
+setup:
+- "some_cmd foo bar buzz"
+- "some_other_cmd"
+dependencies:
+- "bundle install"
+- "mvn clean dependencies"
+test:
+- rake
+- "mvn test"
+deploy:
+  some_deployment_target:
+    branch: master
+    cmds:
+      - asdf
+      - bar
+  some_other_target:
+    branch: release
+    cmds:
+      - fubar

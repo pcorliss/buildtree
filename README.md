@@ -49,6 +49,8 @@ BuildTree is an open source continous integration service.
 - [ ] Dependent Builds
 - [ ] Matrix Builds
 - [ ] Slack Notifications
+- [ ] Readable Build Output - split up commands and blocks via echo
+  statements
 - [ ] Elastic Builds (Spin up Workers on demand)
 - [ ] Caching of dependencies cache
 - [ ] Docker Registry

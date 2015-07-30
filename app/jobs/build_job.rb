@@ -12,10 +12,19 @@ class BuildJob
       write_private_key(dir)
       git_clone(dir)
       git_co(dir)
+
+      #build_config = BuildConfig.new(
+        #config: File.read("#{dir}/source/.bt.yml"),
+        #repo: @repo.short_name,
+        #branch: @build.branch,
+        #sha: @build.sha,
+        #dir: "#{dir}/source",
+      #)
+      #build_config.write("#{dir}/bt.sh")
+
       process = run_docker_container(dir)
       @build.success = (process.exitstatus == 0)
       @build.save
-      #`cp -pr #{dir} tmp/`
     end
   end
 
