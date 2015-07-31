@@ -52,7 +52,7 @@ class BuildJob
   end
 
   def run_docker_container(dir)
-    system_cmd("docker run -i -v #{dir}:/var/ci #{build_config(dir).docker_image} /var/ci/bt.sh")
+    system_cmd("docker run --rm -i -v #{dir}:/var/ci #{build_config(dir).docker_image} /var/ci/bt.sh")
   end
 
   # IO Select usage cargo culted from https://gist.github.com/chrisn/7450808
