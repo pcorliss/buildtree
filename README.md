@@ -12,7 +12,63 @@ BuildTree is an open source continous integration service.
 
 ## Installation
 
+Generate OAuth Keys via Github
+Generate random passphrase
+Set Env Variables via env file
+Enable SSL
+
+```
+GITHUB_HOST=<GHE Enterprise or Github>
+GITHUB_KEY=<Application Key>
+GITHUB_SECRET=<Application Secret>
+SSH_KEY_SIZE=4096 # Recomended Default but a little slow
+SSH_PASSPHRASE=<Generated random phrase, recomended 40 chars>
+POSTGRES_HOST=<Postgres Host>
+POSTGRES_PORT=5433
+POSTGRES_DATABASE=buildtree_production
+POSTGRES_USER=buildtree
+POSTGRES_PASS=<Generated random phrase, recomended 40 chars>
+```
+
+Create Database
+
+docker run -d --env-file=<env-file> pcorliss/buildtree
+
+# On Build Machines
+docker run -d --env-file=<env-file> --privileged pcorliss/buildtree bin/delayed_job
+-n <workers> --sleep-delay=10
+
 ## Development
+
+```
+# Start Postgres
+createuser --createdb buildtree
+
+git clone https://github.com:pcorliss/buildtree.git
+cd buildtree
+
+# RVM recomended but as long as ruby-2.2.1 is installed you should be okay
+bundle install
+rake db:create:all
+rake db:migrate
+
+rspec
+rails server
+```
+
+## Environment Variables
+
+Customize your experience by setting environment variables
+
+```
+RACK_ENV=development
+PORT=3000
+GITHUB_HOST=...
+GITHUB_KEY=<Your Github Key>
+GITHUB_SECRET=<Your Github Secret>
+SSH_KEY_SIZE=4096
+SSH_PASSPHRASE=hello world
+```
 
 ### TODOs before 0.1.0 release
 - [x] Flush user_repos cache every 24 hours
