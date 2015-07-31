@@ -109,7 +109,9 @@ EOS
       fh.puts self.test
       fh.puts
       fh.puts self.deployments
+      fh.chmod(0755)
     end
+
   end
 
   private

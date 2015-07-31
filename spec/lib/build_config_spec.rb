@@ -176,9 +176,16 @@ EOS
   describe "#write" do
     let(:expected_build_script) { File.read('spec/fixtures/bt.sh') }
 
+    class FileLikeStringIO < StringIO
+      def chmod(*args)
+      end
+    end
+
     it "writes a build script from components" do
-      file = StringIO.new
+      file = FileLikeStringIO.new
+
       expect(File).to receive(:open).with("filename", "w").and_yield(file)
+      expect(file).to receive(:chmod).with(0755)
       build_config.write("filename")
       file.rewind
       expect(file.read).to eq(expected_build_script)

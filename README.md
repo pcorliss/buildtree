@@ -31,7 +31,7 @@ BuildTree is an open source continous integration service.
   - [x] Build Head button on repo show
   - [x] Nav (SignIn/Out, Dashboard, Add Repo)
 - [x] Check out a specific SHA, not just the head of the branch
-- [ ] Construct a shell script from a config file
+- [x] Construct a shell script from a config file
 - [ ] Github Integration (Callbacks)
 - [ ] Run docker within docker
 - [ ] Installation documentation

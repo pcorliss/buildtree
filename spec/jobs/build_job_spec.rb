@@ -6,11 +6,13 @@ describe BuildJob do
   let(:build_job) { BuildJob.new(build) }
   let(:tmpdir) { Dir.mktmpdir('build_job_spec') }
   let(:mock_process) { double(Process::Status, exitstatus: 0) }
+  let(:build_config_fixture) { File.read('spec/fixtures/build_config.yml') }
 
   describe "#perform" do
     before do
       allow(Dir).to receive(:mktmpdir).and_yield(tmpdir)
       allow(build_job).to receive(:system_cmd).and_return(mock_process)
+      allow(File).to receive(:read).with("#{tmpdir}/source/.bt.yml").and_return(build_config_fixture)
       ENV['GIT_SSH_COMMAND'] = nil
     end
 
@@ -29,7 +31,12 @@ describe BuildJob do
     it "sets the private key" do
       build_job.perform
       private_key_path = "#{tmpdir}/private_key.pem"
-      private_key = File.read(private_key_path)
+      private_key = ""
+      # This is due to some weird stubbing behavior preventing File.read
+      # when it's already stubbed. Ideally we'd just call File.read.
+      File.open(private_key_path) do |fh|
+        private_key = fh.read
+      end
       expect(SSHKey.new(private_key).fingerprint).to eq(repo.fingerprint)
       expect(File.stat(private_key_path).mode).to eq(0100600)
       expect(ENV['GIT_SSH_COMMAND']).to eq("ssh -i #{private_key_path}")
@@ -47,8 +54,15 @@ describe BuildJob do
       build_job.perform
     end
 
+    it "writes the generated build config to a file" do
+      build_job.perform
+      script_path = "#{tmpdir}/bt.sh"
+      expect(File.exists?(script_path)).to be_truthy
+      expect(File.stat(script_path).mode).to eq(0100755)
+    end
+
     it "runs docker container" do
-      expected_docker_cmd = "docker run -i -v #{tmpdir}:/var/ci ubuntu:14.04 /var/ci/source/ci.sh"
+      expected_docker_cmd = "docker run -i -v #{tmpdir}:/var/ci ubuntu:15.10 /var/ci/bt.sh"
       expect(build_job).to receive(:system_cmd).with(expected_docker_cmd)
       build_job.perform
     end

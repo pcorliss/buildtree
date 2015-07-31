@@ -12,16 +12,7 @@ class BuildJob
       write_private_key(dir)
       git_clone(dir)
       git_co(dir)
-
-      #build_config = BuildConfig.new(
-        #config: File.read("#{dir}/source/.bt.yml"),
-        #repo: @repo.short_name,
-        #branch: @build.branch,
-        #sha: @build.sha,
-        #dir: "#{dir}/source",
-      #)
-      #build_config.write("#{dir}/bt.sh")
-
+      build_config(dir).write("#{dir}/bt.sh")
       process = run_docker_container(dir)
       @build.success = (process.exitstatus == 0)
       @build.save
@@ -29,6 +20,7 @@ class BuildJob
   end
 
   private
+
   def tmpdir
     Dir.mktmpdir("build_job", ENV['TMPDIR']) { |dir| yield(dir) }
   end
@@ -49,8 +41,18 @@ class BuildJob
     system_cmd("cd #{dir}/source && git checkout #{@build.sha}")
   end
 
+  def build_config(dir)
+    @build_config ||= BuildConfig.new(
+      config: File.read("#{dir}/source/.bt.yml"),
+      repo: @repo.short_name,
+      branch: @build.branch,
+      sha: @build.sha,
+      dir: "#{dir}/source",
+    )
+  end
+
   def run_docker_container(dir)
-    system_cmd("docker run -i -v #{dir}:/var/ci ubuntu:14.04 /var/ci/source/ci.sh")
+    system_cmd("docker run -i -v #{dir}:/var/ci #{build_config(dir).docker_image} /var/ci/bt.sh")
   end
 
   # IO Select usage cargo culted from https://gist.github.com/chrisn/7450808
