@@ -95,10 +95,11 @@ SSH_PASSPHRASE=hello world
 #### TODOs for future releases
 - [ ] Setup Websocket communication between front-end and builder
 - [ ] Setup Websocket communication between front-end and client
+- [ ] Fail the build if git can't clone or checkout
 - [ ] Save logs to S3 instead of the DB
-- [ ] A resync user permissions button
-- [ ] Create a repo query event which enques a build on repo creation.
-- [ ] Destroy docker instance after running
+- [x] A resync user permissions button
+- [ ] Create a repo query event which enques a build on repo creation. (Is this desired behavior with the build head button?)
+- [x] Destroy docker instance after running
 - [ ] add pagination repos show
 - [ ] UI Breadcrumbs
 - [ ] Secrets
@@ -107,7 +108,9 @@ SSH_PASSPHRASE=hello world
 - [ ] Slack Notifications
 - [ ] Readable Build Output - split up commands and blocks via echo
   statements
+- [ ] Shared Secrets
 - [ ] Elastic Builds (Spin up Workers on demand)
+- [ ] Display/Store build status like queue time and run time
 - [ ] Caching of dependencies cache
 - [ ] Docker Registry
 - [ ] SSH Access to running docker image
@@ -115,3 +118,6 @@ SSH_PASSPHRASE=hello world
 - [ ] Fine-Grained Security support, view vs. create vs. admin
 - [ ] Build isolation security work
 - [ ] Shareable Custom Dashboards
+- [ ] Better looking dashboards
+- [ ] Scheduled Builds
+- [ ] Synchronous Builds
