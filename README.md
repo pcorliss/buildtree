@@ -89,7 +89,7 @@ SSH_PASSPHRASE=hello world
 - [x] Check out a specific SHA, not just the head of the branch
 - [x] Construct a shell script from a config file
 - [ ] Github Integration (Callbacks)
-- [ ] Run docker within docker
+- [x] Run docker within docker
 - [ ] Installation documentation
 
 #### TODOs for future releases
