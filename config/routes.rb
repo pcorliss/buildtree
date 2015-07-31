@@ -20,7 +20,11 @@ Rails.application.routes.draw do
   end
 
   resources :builds, only: [:show]
-  resources :users, only: [:show]
+  resources :users, only: [:show] do
+    collection do
+      post :sync, to: 'users#sync'
+    end
+  end
 end
 
 Rails.application.routes.url_helpers.module_eval do

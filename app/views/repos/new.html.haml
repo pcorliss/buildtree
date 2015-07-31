@@ -3,6 +3,8 @@
 
   %legend Create Repo
 
+  = button_to "ReSync", sync_users_path, method: :post, class: 'btn btn-primary btn-xs'
+
   %table.table.table-striped.table-hover.no-highlights
     %tr
       %th Service

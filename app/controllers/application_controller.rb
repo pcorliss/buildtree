@@ -38,9 +38,13 @@ class ApplicationController < ActionController::Base
   end
 
   def user_repos
-    Rails.cache.fetch("user_repos_#{current_user.slug}", expires_in: 24.hours) do
+    Rails.cache.fetch(user_repos_key, expires_in: 24.hours) do
       GitApi.new(current_user).repos
     end
+  end
+
+  def user_repos_key
+    "user_repos_#{current_user.slug}"
   end
 
   def load_repo

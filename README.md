@@ -34,7 +34,7 @@ Create Database
 
 docker run -d --env-file=<env-file> pcorliss/buildtree
 
-# On Build Machines
+### On Build Machines
 docker run -d --env-file=<env-file> --privileged pcorliss/buildtree bin/delayed_job
 -n <workers> --sleep-delay=10
 

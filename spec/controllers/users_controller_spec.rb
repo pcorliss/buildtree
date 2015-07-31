@@ -9,6 +9,13 @@ describe UsersController do
         :id => "1",
       )
     end
+
+    it "routes to #show" do
+      expect(post: "/users/sync").to route_to(
+        :controller => "users",
+        :action => "sync",
+      )
+    end
   end
 
   describe "#show" do
@@ -55,6 +62,39 @@ describe UsersController do
         user.repos = [repo_a, repo_b]
         get :show, id: user
         expect(assigns(:builds)).to eq(expected_builds)
+      end
+    end
+  end
+
+  describe "#sync" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:repo) { FactoryGirl.create(:repo, name: "a") }
+    let(:api_repos) {[repo.to_api_params]}
+
+    context "signed out" do
+      it "redirects the user to sign in" do
+        post :sync
+        expect(flash[:error]).to eq(["Please log in"])
+        expect(response).to redirect_to(signin_auth_path)
+      end
+    end
+
+    context "signed in" do
+      before do
+        session[:user_id] = user.id
+        allow_any_instance_of(GitApi).to receive(:repos).and_return(api_repos)
+      end
+
+      it "clears the cache on the user_repos for that user" do
+        Rails.cache.write("user_repos_#{user.slug}", [])
+        post :sync
+        updated_cache = Rails.cache.fetch("user_repos_#{user.slug}")
+        expect(updated_cache).to eq(api_repos)
+      end
+
+      it "redirects to the new repo page" do
+        post :sync
+        expect(response).to redirect_to(new_repo_path)
       end
     end
   end
