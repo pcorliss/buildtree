@@ -191,4 +191,27 @@ describe GitApi do
       expect(api.head_sha("foo/bar", "master")).to eq('d82d4aaaf1ad77e5e41c6baac143817f89f48506')
     end
   end
+
+  context "#set_status" do
+    let(:api) { GitApi.new(github_user) }
+
+    it "sets the status of the repository" do
+      expect(api.source).to receive(:create_status).with(
+        "foo/bar",
+        "a"*40,
+        "success",
+        context: "BuildTree",
+        target_url: "http://example.com/foo/bar",
+        description: "Build Completed Successfully",
+      )
+      api.set_status(
+        repo: "foo/bar",
+        sha: "a"*40,
+        status: "success",
+        context: "BuildTree",
+        target_url: "http://example.com/foo/bar",
+        description: "Build Completed Successfully",
+      )
+    end
+  end
 end

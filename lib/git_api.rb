@@ -78,6 +78,15 @@ class GitApi
     @source.ref(repo, "heads/#{branch}").object.sha
   end
 
+  def set_status(options = {})
+    @source.create_status(
+      options.delete(:repo),
+      options.delete(:sha),
+      options.delete(:status),
+      options
+    )
+  end
+
   private
 
   def github_deploy_keys(owner, name)
