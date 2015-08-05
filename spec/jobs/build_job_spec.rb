@@ -6,6 +6,7 @@ describe BuildJob do
   let(:build_job) { BuildJob.new(build) }
   let(:tmpdir) { Dir.mktmpdir('build_job_spec') }
   let(:mock_process) { double(Process::Status, exitstatus: 0) }
+  let(:fail_process) { double(Process::Status, exitstatus: 1) }
   let(:build_config_fixture) { File.read('spec/fixtures/build_config.yml') }
 
   describe "#perform" do
@@ -48,10 +49,24 @@ describe BuildJob do
       build_job.perform
     end
 
+    it "fails the build if the git clone operation fails" do
+      expected_git_clone_cmd = "git clone git@github.com:pcorliss/design_patterns.git --branch master --single-branch --depth 10 #{tmpdir}/source"
+      expect(build_job).to receive(:system_cmd).with(expected_git_clone_cmd).and_return(fail_process)
+      build_job.perform
+      expect(build.success?).to be_falsey
+    end
+
     it "executes a git checkout to the specified SHA" do
       expected_git_co_cmd = "cd #{tmpdir}/source && git checkout ffcaf395a6bb110182d357cebb4b9b49e34b6394"
       expect(build_job).to receive(:system_cmd).with(expected_git_co_cmd)
       build_job.perform
+    end
+
+    it "fails the build if it can't checkout the sha" do
+      expected_git_co_cmd = "cd #{tmpdir}/source && git checkout ffcaf395a6bb110182d357cebb4b9b49e34b6394"
+      expect(build_job).to receive(:system_cmd).with(expected_git_co_cmd).and_return(fail_process)
+      build_job.perform
+      expect(build.success?).to be_falsey
     end
 
     it "writes the generated build config to a file" do

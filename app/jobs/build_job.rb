@@ -10,16 +10,25 @@ class BuildJob
   def perform
     tmpdir do |dir|
       write_private_key(dir)
-      git_clone(dir)
-      git_co(dir)
+      return short_circuit! if short_circuit?(git_clone(dir))
+      return short_circuit! if short_circuit?(git_checkout(dir))
       build_config(dir).write("#{dir}/bt.sh")
-      process = run_docker_container(dir)
-      @build.success = (process.exitstatus == 0)
-      @build.save
+      return short_circuit! if short_circuit?(run_docker_container(dir))
     end
+    @build.success = true
+    @build.save
   end
 
   private
+
+  def short_circuit?(process)
+    process.exitstatus > 0
+  end
+
+  def short_circuit!
+    @build.success = false
+    @build.save
+  end
 
   def tmpdir
     Dir.mktmpdir("build_job", ENV['TMPDIR']) { |dir| yield(dir) }
@@ -37,7 +46,7 @@ class BuildJob
     system_cmd("git clone #{@repo.git_url} --branch #{@build.branch} --single-branch --depth 10 #{dir}/source")
   end
 
-  def git_co(dir)
+  def git_checkout(dir)
     system_cmd("cd #{dir}/source && git checkout #{@build.sha}")
   end
 

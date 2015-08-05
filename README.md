@@ -96,7 +96,7 @@ SSH_PASSPHRASE=hello world
 - [ ] Github Enterprise Support
 - [ ] Setup Websocket communication between front-end and builder
 - [ ] Setup Websocket communication between front-end and client
-- [ ] Fail the build if git can't clone or checkout
+- [x] Fail the build if git can't clone or checkout
 - [ ] Save logs to S3 instead of the DB
 - [x] A resync user permissions button
 - [ ] Create a repo query event which enques a build on repo creation. (Is this desired behavior with the build head button?)
