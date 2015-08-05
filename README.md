@@ -93,6 +93,7 @@ SSH_PASSPHRASE=hello world
 - [ ] Installation documentation
 
 #### TODOs for future releases
+- [ ] Github Enterprise Support
 - [ ] Setup Websocket communication between front-end and builder
 - [ ] Setup Websocket communication between front-end and client
 - [ ] Fail the build if git can't clone or checkout

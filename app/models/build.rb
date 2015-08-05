@@ -9,4 +9,7 @@ class Build < ActiveRecord::Base
   def enqueue!
     Delayed::Job.enqueue BuildJob.new(self)
   end
+
+  def set_hosting_status!(git_api = nil)
+  end
 end
