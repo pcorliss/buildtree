@@ -1,0 +1,58 @@
+docker_image: "ubuntu:15.10"
+env:
+  FOO: foo
+  BAR: bar
+packages:
+- curl
+- wget
+package_setup:
+- "some_cmd foo bar buzz"
+- "some_other_cmd"
+services:
+- cassandra
+- docker
+setup:
+- "some_cmd foo bar buzz"
+- "some_other_cmd"
+dependencies:
+- "bundle install"
+- "mvn clean dependencies"
+test:
+- rake
+- "mvn test"
+build_in_parallel:
+- sub_project: 'some/path/inside/project/.bt.yml'
+  env:
+    PARENT_FOO: $FOO
+    PARENT_BAR: 'simple'
+- service: github
+  organization: foo
+  name: bar
+  branch: master
+  sha: abcdefg
+  env:
+    PARENT_FOO: $FOO
+    PARENT_BAR: 'simple'
+build_on_success:
+- sub_project: 'some/path/inside/project/.bt.yml'
+  env:
+    PARENT_FOO: $FOO
+    PARENT_BAR: 'simple'
+- service: github
+  organization: foo
+  name: bar
+  branch: master
+  sha: abcdefg
+  env:
+    PARENT_FOO: $FOO
+    PARENT_BAR: 'simple'
+deploy:
+  some_deployment_target:
+    branch: master
+    cmds:
+      - asdf
+      - bar
+  some_other_target:
+    branch: release
+    cmds:
+      - fubar

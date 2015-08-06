@@ -26,12 +26,6 @@ EOS
   end
 
   def environment_variables
-    env_config = @config['env'] || {}
-    env_config["SHA"] = @sha if @sha
-    env_config["BRANCH"] = @branch if @branch
-    env_config["REPO"] = @repo if @repo
-    env_config["DIR"] = @dir if @dir
-
     env_config.map do |key, val|
       "export #{key}=\"#{val}\"\n"
     end.join
@@ -111,10 +105,45 @@ EOS
       fh.puts self.deployments
       fh.chmod(0755)
     end
+  end
+
+  def start_parallel_builds
 
   end
 
+  def start_dependent_builds
+
+  end
+
+  def child_builds
+    parallel_build_configs = @config["build_in_parallel"] || []
+    dependent_build_configs = @config["build_on_success"] || []
+
+    children = []
+
+    parallel_build_configs.each do |build|
+      children << Build.new
+    end
+
+    dependent_build_configs.each do |build|
+      children << Build.new
+    end
+
+    children
+  end
+
   private
+
+  def env_config
+    return @env_config if @env_config
+    @env_config = @config['env'] || {}
+    @env_config["SHA"] = @sha if @sha
+    @env_config["BRANCH"] = @branch if @branch
+    @env_config["REPO"] = @repo if @repo
+    @env_config["DIR"] = @dir if @dir
+
+    @env_config
+  end
 
   def join_cmds(key)
     return "" unless @config[key]

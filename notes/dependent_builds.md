@@ -21,10 +21,14 @@ New DB attrs:
 parent_id: int
 top_parent_id: int (For conveinance)
 env: json_string (PARENT_SHA:...)
-parallel: boolean
-sub_project: path
+parallel: boolean (necessary?)
+sub_project: path (presence indicates sub project build)
 build_success: just this build, not children
 ```
+
+Build -> Child Build (but another repo? (Yes, repo id would be other))
+Need to hide child builds List/GUI? (No)
+Need to prevent circular builds (Yes)
 
 Sets SHA, branch and repo automatically
 

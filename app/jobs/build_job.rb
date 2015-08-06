@@ -12,11 +12,13 @@ class BuildJob
       write_private_key(dir)
       return short_circuit! if short_circuit?(git_clone(dir))
       return short_circuit! if short_circuit?(git_checkout(dir))
+      #build_config(dir).start_parallel_builds
       build_config(dir).write("#{dir}/bt.sh")
       return short_circuit! if short_circuit?(run_docker_container(dir))
+      @build.success = true
+      @build.save
+      #build_config(dir).start_dependent_builds
     end
-    @build.success = true
-    @build.save
   end
 
   private

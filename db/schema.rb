@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150727000435) do
+ActiveRecord::Schema.define(version: 20150805235254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,10 +28,16 @@ ActiveRecord::Schema.define(version: 20150727000435) do
   create_table "builds", force: :cascade do |t|
     t.integer  "repo_id"
     t.string   "branch"
-    t.string   "sha",        limit: 40
+    t.string   "sha",              limit: 40
     t.boolean  "success"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "parent_id"
+    t.integer  "top_parent_id"
+    t.string   "env"
+    t.boolean  "parallel"
+    t.string   "sub_project_path"
+    t.boolean  "build_success"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|

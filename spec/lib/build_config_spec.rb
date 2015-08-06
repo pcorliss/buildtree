@@ -13,6 +13,34 @@ describe BuildConfig do
   let(:build_config) { BuildConfig.new(project_info) }
   let(:empty_build_config) { BuildConfig.new }
 
+  context "dependent builds" do
+    let(:build_config_fixture) { File.read('spec/fixtures/dependent_build_config.yml') }
+
+    describe "#start_parallel_builds"
+    describe "#start_dependent_builds"
+    describe "#child_builds" do
+      it "returns a collection of new_record build jobs" do
+        child_builds = build_config.child_builds
+
+        expect(child_builds.map(&:class).uniq).to eq([Build])
+        expect(child_builds.all? {|b| b.new_record?}).to be_truthy
+      end
+
+      it "returns an empty collection if there are no parallel builds and dependent builds" do
+        expect(empty_build_config.child_builds).to eq([])
+      end
+
+      it "sets the repo"
+      it "sets the parent build"
+      it "sets both static and dynamic env variables as a json string"
+      it "sets the parent sha and branch in the env variables"
+      it "sets the parallel build boolean to true for parallel builds"
+      it "sets the parallel build boolean to false for dependent builds"
+      it "sets the sub_project_path if it's a sub project build"
+      it "doesn't set the sub_project_path if it isn't a sub project build"
+    end
+  end
+
   describe "#docker_image" do
     it "returns docker image specified" do
       expect(build_config.docker_image).to eq('ubuntu:15.10')

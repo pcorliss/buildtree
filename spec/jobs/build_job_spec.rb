@@ -98,5 +98,8 @@ describe BuildJob do
       build_job.perform
       expect(build.new_record?).to be_falsey
     end
+
+    it "sets success only after all parallel jobs are complete"
+    it "handles a null sha field by just checking out the head of the branch"
   end
 end
