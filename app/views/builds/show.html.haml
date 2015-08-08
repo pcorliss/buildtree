@@ -27,6 +27,9 @@
     %dt Git
     %dd= link_to @repo.external_url, @repo.external_url
 
+    %dt All builds
+    %dd= link_to @repo.builds.count, repo_path(@repo)
+
   %legend Build Log
 
   - @build.build_logs.each do |log|
