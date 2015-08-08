@@ -488,6 +488,14 @@ describe ReposController do
           expected_path = build_repos_path(path_params)
           expect(response).to redirect_to(expected_path)
         end
+
+        context "empty repo" do
+          it "redirects to repo path" do
+            allow_any_instance_of(GitApi).to receive(:head_sha).and_raise(Octokit::Conflict)
+            post :build, repo_params
+            expect(response).to redirect_to(repo_path(repo))
+          end
+        end
       end
     end
   end

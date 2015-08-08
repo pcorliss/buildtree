@@ -305,6 +305,7 @@ DEPENDENCIES
   pry-rails
   rails (~> 4.2.3)
   rails_12factor
+  rake (~> 10.4.2)
   rb-fsevent
   rspec-rails
   sass-rails

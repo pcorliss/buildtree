@@ -42,6 +42,7 @@ group :development, :test do
 end
 
 group :test do
+  gem 'rake', '~> 10.4.2'
   gem 'webmock'
   gem 'simplecov', :require => false
   # 1.29s
