@@ -12,9 +12,9 @@ BuildTree is an open source continous integration service.
 
 ## Installation
 
-Generate OAuth Keys via Github
+Generate OAuth Keys [via Github](https://github.com/settings/applications/new)
 Generate random passphrase
-Set Env Variables via env file
+Set Env Variables via .env file (see the following list)
 Enable SSL
 
 ```
@@ -30,13 +30,18 @@ POSTGRES_USER=buildtree
 POSTGRES_PASS=<Generated random phrase, recomended 40 chars>
 ```
 
-Create Database
+### Create Database
 
+```
 docker run -d --env-file=<env-file> pcorliss/buildtree
+```
 
 ### On Build Machines
+
+```
 docker run -d --env-file=<env-file> --privileged pcorliss/buildtree bin/delayed_job
 -n <workers> --sleep-delay=10
+```
 
 ## Development
 
@@ -44,7 +49,7 @@ docker run -d --env-file=<env-file> --privileged pcorliss/buildtree bin/delayed_
 # Start Postgres
 createuser --createdb buildtree
 
-git clone https://github.com:pcorliss/buildtree.git
+git clone https://github.com/pcorliss/buildtree.git
 cd buildtree
 
 # RVM recomended but as long as ruby-2.2.1 is installed you should be okay
