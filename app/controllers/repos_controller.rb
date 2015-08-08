@@ -68,6 +68,8 @@ class ReposController < ApplicationController
     build = @repo.builds.create(branch: branch, sha: sha)
     build.enqueue!
     redirect_to build_repos_path(@repo.to_params.merge(id: build).symbolize_keys)
+  rescue Octokit::Conflict
+    redirect_with_error(repo_path(@repo), "Repo is empty")
   end
 
   private
