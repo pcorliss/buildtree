@@ -16,13 +16,17 @@
     %dt Created
     %dd= @build.created_at
 
-    %dt Success
+    %dt Status
     - if @build.pending?
-      %dd= fa_icon "question"
+      %dd= fa_icon "cog spin"
+    - elsif @build.queued?
+      %dd= fa_icon "clock-o"
     - elsif @build.success?
       %dd.text-success= fa_icon "check"
-    - else
+    - elsif @build.failure?
       %dd.text-danger= fa_icon "times"
+    - else
+      %dd.text-danger= fa_icon "exclamation-triangle"
 
     %dt Git
     %dd= link_to @repo.external_url, @repo.external_url
