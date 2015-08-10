@@ -73,6 +73,8 @@ GITHUB_KEY=<Your Github Key>
 GITHUB_SECRET=<Your Github Secret>
 SSH_KEY_SIZE=4096
 SSH_PASSPHRASE=hello world
+DEFAULT_HOST=localhost:3000
+TMPDIR=/Users/.../git/buildtree/tmp
 ```
 
 ### TODOs before 0.1.0 release
@@ -93,7 +95,7 @@ SSH_PASSPHRASE=hello world
   - [x] Nav (SignIn/Out, Dashboard, Add Repo)
 - [x] Check out a specific SHA, not just the head of the branch
 - [x] Construct a shell script from a config file
-- [ ] Github Integration (Callbacks)
+- [x] Github Integration (Callbacks)
 - [x] Run docker within docker
 - [ ] Installation documentation
 

@@ -7,7 +7,7 @@ class BuildConfig
     @sha = project[:sha]
     @branch = project[:branch]
     @repo = project[:repo]
-    @dir = project[:dir]
+    @dir = '/var/ci/source'
   end
 
   def docker_image
@@ -140,7 +140,7 @@ EOS
     @env_config["SHA"] = @sha if @sha
     @env_config["BRANCH"] = @branch if @branch
     @env_config["REPO"] = @repo if @repo
-    @env_config["DIR"] = @dir if @dir
+    @env_config["DIR"] = @dir
 
     @env_config
   end

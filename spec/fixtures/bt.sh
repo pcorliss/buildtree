@@ -3,14 +3,14 @@
 set -o nounset
 set -o errexit
 
-cd /tmp
+cd /var/ci/source
 
 export FOO="foo"
 export BAR="bar"
 export SHA="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 export BRANCH="master"
 export REPO="foo/bar"
-export DIR="/tmp"
+export DIR="/var/ci/source"
 
 if type apt-get 2>/dev/null; then
   apt-get update -y

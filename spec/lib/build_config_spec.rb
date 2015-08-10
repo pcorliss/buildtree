@@ -62,7 +62,7 @@ describe BuildConfig do
     end
 
     it "sets the project dir" do
-      expect(build_config.environment_variables).to include(%Q[export DIR="/tmp"\n])
+      expect(build_config.environment_variables).to include(%Q[export DIR="/var/ci/source"\n])
     end
 
     it "sets the sha" do
@@ -74,8 +74,8 @@ describe BuildConfig do
       expect(build_config.environment_variables).to include(%Q[export BRANCH="master"\n])
     end
 
-    it "returns an empty string with a blank config" do
-      expect(empty_build_config.environment_variables).to be_empty
+    it "returns just dir with a blank config" do
+      expect(empty_build_config.environment_variables).to eq("export DIR=\"/var/ci/source\"\n")
     end
   end
 
@@ -195,7 +195,7 @@ EOS
 set -o nounset
 set -o errexit
 
-cd /tmp
+cd /var/ci/source
 EOS
       expect(build_config.header).to eq(header)
     end

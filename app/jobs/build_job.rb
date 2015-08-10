@@ -15,7 +15,7 @@ class BuildJob
   end
 
   def perform
-    # in progress
+    set_status(:pending)
     tmpdir do |dir|
       write_private_key(dir)
       return short_circuit! if short_circuit?(git_clone(dir))
@@ -23,27 +23,35 @@ class BuildJob
       #build_config(dir).start_parallel_builds
       build_config(dir).write("#{dir}/bt.sh")
       return short_circuit! if short_circuit?(run_docker_container(dir))
-      @build.success!
-      @build.save
+      set_status(:success)
       #build_config(dir).start_dependent_builds
     end
   end
 
   private
 
-  # TODO not yet tested
   def set_status(status)
-    users = [@auth_user] || @build.users.shuffle
-    @auth_user = GitApi.with_authorized_users(users) do |api|
+    @build.status = status
+    @build.save
+    @auth_user = GitApi.with_authorized_users(authorized_users) do |api|
       api.set_status(
         repo: @repo.short_name,
         sha: @build.sha,
         status: status,
         description: STATUS_TO_DESCRIPTION[status],
         context: "BuildTree",
-        target_url: url,
+        target_url: build_url,
       )
     end
+  end
+
+  def build_url
+    Rails.application.routes.url_helpers.build_repos_url(@repo.to_params.symbolize_keys.merge(id: @build.id, host: ENV['DEFAULT_HOST']))
+  end
+
+  def authorized_users
+    return [@auth_user] if @auth_user
+    @repo.users.shuffle
   end
 
   def short_circuit?(process)
@@ -51,8 +59,7 @@ class BuildJob
   end
 
   def short_circuit!
-    @build.failure!
-    @build.save
+    set_status(:failure)
   end
 
   def tmpdir

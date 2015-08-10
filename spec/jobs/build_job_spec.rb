@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 describe BuildJob do
-  let(:repo) { FactoryGirl.build(:private_key_repo) }
-  let(:build) { FactoryGirl.build(:build, repo: repo) }
+  let(:repo) { FactoryGirl.build(:private_key_repo, users: [user]) }
+  let(:build) { FactoryGirl.build(:build, repo: repo, status: 0, build_status: 0) }
+  let(:user) { FactoryGirl.build(:user) }
   let(:build_job) { BuildJob.new(build) }
   let(:tmpdir) { Dir.mktmpdir('build_job_spec') }
   let(:mock_process) { double(Process::Status, exitstatus: 0) }
@@ -14,6 +15,8 @@ describe BuildJob do
       allow(Dir).to receive(:mktmpdir).and_yield(tmpdir)
       allow(build_job).to receive(:system_cmd).and_return(mock_process)
       allow(File).to receive(:read).with("#{tmpdir}/source/.bt.yml").and_return(build_config_fixture)
+      allow(Rails.application.routes.url_helpers).to receive(:build_repos_url).and_return("http://example.com/")
+      allow_any_instance_of(GitApi).to receive(:set_status)
       ENV['GIT_SSH_COMMAND'] = nil
     end
 
@@ -22,6 +25,14 @@ describe BuildJob do
         FileUtils.remove_entry tmpdir
       end
       ENV['GIT_SSH_COMMAND'] = nil
+    end
+
+    it "sets the build status multiple times during run" do
+      expect(build_job).to receive(:set_status).with(:pending).once
+      expect(build_job).to receive(:set_status).with(:success).once
+      # Unfortunately I'm not able to inspect the database field here
+      # Also unfortunate that the call to GitApi isn't tested well here
+      build_job.perform
     end
 
     it "creates a temporary directory" do
@@ -101,5 +112,6 @@ describe BuildJob do
 
     it "sets success only after all parallel jobs are complete"
     it "handles a null sha field by just checking out the head of the branch"
+
   end
 end
