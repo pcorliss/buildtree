@@ -87,6 +87,18 @@ class GitApi
     )
   end
 
+  def self.with_authorized_users(users, &block)
+    users.detect do |user|
+      api = GitApi.new(user)
+      begin
+        block.call(api)
+        true
+      rescue Octokit::NotFound
+        false
+      end
+    end
+  end
+
   private
 
   def github_deploy_keys(owner, name)

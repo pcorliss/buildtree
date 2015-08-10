@@ -2,12 +2,20 @@ require 'open3'
 require 'tempfile'
 
 class BuildJob
+  STATUS_TO_DESCRIPTION = {
+    pending: "Build is in progress",
+    failure: "Build failed",
+    error: "Build has errored out",
+    success: "Build has succeeded",
+  }
+
   def initialize(build)
     @build = build
     @repo = build.repo
   end
 
   def perform
+    # in progress
     tmpdir do |dir|
       write_private_key(dir)
       return short_circuit! if short_circuit?(git_clone(dir))
@@ -22,6 +30,21 @@ class BuildJob
   end
 
   private
+
+  # TODO not yet tested
+  def set_status(status)
+    users = [@auth_user] || @build.users.shuffle
+    @auth_user = GitApi.with_authorized_users(users) do |api|
+      api.set_status(
+        repo: @repo.short_name,
+        sha: @build.sha,
+        status: status,
+        description: STATUS_TO_DESCRIPTION[status],
+        context: "BuildTree",
+        target_url: url,
+      )
+    end
+  end
 
   def short_circuit?(process)
     process.exitstatus > 0

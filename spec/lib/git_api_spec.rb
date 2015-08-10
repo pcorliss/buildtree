@@ -214,4 +214,54 @@ describe GitApi do
       )
     end
   end
+
+  context "#self.with_authorized_user" do
+    let(:users) {[github_user, github_user, auth_user]}
+    let(:auth_user)  { Struct::User.new('efg123', nil, 'github') }
+    let(:unauth_api) {GitApi.new(github_user)}
+    let(:auth_api) {GitApi.new(github_user)}
+    let(:status) {{
+      repo: 'foo/bar',
+      sha: "a"*40,
+      status: 'success',
+    }}
+
+    before do
+      allow(GitApi).to receive(:new).and_return(unauth_api, unauth_api, auth_api)
+      allow(unauth_api).to receive(:set_status).and_raise(Octokit::NotFound)
+      allow(auth_api).to receive(:set_status).and_return(nil)
+    end
+
+    it "iterates through a list of users executing the command until successful" do
+      expect(unauth_api).to receive(:set_status).ordered.twice.and_raise(Octokit::NotFound)
+      expect(auth_api).to receive(:set_status).ordered.once.and_return(nil)
+
+      expect do
+        GitApi.with_authorized_users(users) do |api|
+          api.set_status(status)
+        end
+      end.to_not raise_error
+    end
+
+    it "short circuits and returns the last authorized user" do
+      allow(GitApi).to receive(:new).and_return(unauth_api, auth_api)
+      users = [github_user, auth_user, github_user]
+
+      last_user = GitApi.with_authorized_users(users) do |api|
+        api.set_status(status)
+      end
+
+      expect(last_user).to eq(auth_user)
+    end
+
+    it "returns nil if there is no authorized_user" do
+      allow(GitApi).to receive(:new).and_return(unauth_api, unauth_api, unauth_api)
+      users = [github_user, auth_user, github_user]
+      last_user = GitApi.with_authorized_users(users) do |api|
+        api.set_status(status)
+      end
+
+      expect(last_user).to be_nil
+    end
+  end
 end
