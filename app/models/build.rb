@@ -1,4 +1,7 @@
 class Build < ActiveRecord::Base
+  enum status: [ :pending, :success, :failure, :error ]
+  enum build_status: [ :build_pending, :build_success, :build_failure, :build_error ]
+
   belongs_to :repo
   has_many :build_logs
 

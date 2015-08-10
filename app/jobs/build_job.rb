@@ -15,7 +15,7 @@ class BuildJob
       #build_config(dir).start_parallel_builds
       build_config(dir).write("#{dir}/bt.sh")
       return short_circuit! if short_circuit?(run_docker_container(dir))
-      @build.success = true
+      @build.success!
       @build.save
       #build_config(dir).start_dependent_builds
     end
@@ -28,7 +28,7 @@ class BuildJob
   end
 
   def short_circuit!
-    @build.success = false
+    @build.failure!
     @build.save
   end
 
