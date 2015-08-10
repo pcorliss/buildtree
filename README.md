@@ -118,6 +118,7 @@ TMPDIR=/Users/.../git/buildtree/tmp
 - [ ] Matrix Builds
 - [ ] Verify we're able to checkout other repos within other projects
 - [ ] Slack Notifications
+- [ ] Handle repo renames gracefully
 - [ ] Readable Build Output - split up commands and blocks via echo
   statements
 - [ ] Shared Secrets
