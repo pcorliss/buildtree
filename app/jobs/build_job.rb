@@ -15,6 +15,7 @@ class BuildJob
   end
 
   def perform
+    set_sha if @build.sha.nil?
     set_status(:pending)
     tmpdir do |dir|
       write_private_key(dir)
@@ -29,6 +30,14 @@ class BuildJob
   end
 
   private
+
+  def set_sha
+    GitApi.with_authorized_users(authorized_users) do |api|
+      sha = api.head_sha(@repo.short_name, @build.branch)
+      @build.sha = sha
+      @build.save
+    end
+  end
 
   def set_status(status)
     @build.status = status

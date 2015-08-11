@@ -97,24 +97,26 @@ TMPDIR=/Users/.../git/buildtree/tmp
 - [x] Construct a shell script from a config file
 - [x] Github Integration (Callbacks)
 - [x] Run docker within docker
+- [x] Fail the build if git can't clone or checkout
+- [x] A resync user permissions button
+- [x] Destroy docker instance after running
 - [ ] Installation documentation
+  - [ ] Dockerize
 
 #### TODOs for future releases
+- [ ] Dependent Builds
+  - [x] Nullable SHA field required for dependent builds
+- [ ] Synchronous Builds
 - [ ] Github Enterprise Support
 - [ ] Setup Websocket communication between front-end and builder
 - [ ] Setup Websocket communication between front-end and client
-- [x] Fail the build if git can't clone or checkout
 - [ ] Fail the build if there is an error of some sort
 - [ ] Save logs to S3 instead of the DB
-- [x] A resync user permissions button
 - [ ] Kitchen Sync Dockerfile Build
 - [ ] Create a repo query event which enques a build on repo creation. (Is this desired behavior with the build head button?)
-- [x] Destroy docker instance after running
 - [ ] add pagination repos show
 - [ ] UI Breadcrumbs
 - [ ] Secrets
-- [ ] Dependent Builds
-  - [ ] Nullable SHA field required for dependent builds
 - [ ] Matrix Builds
 - [ ] Verify we're able to checkout other repos within other projects
 - [ ] Slack Notifications
@@ -133,4 +135,3 @@ TMPDIR=/Users/.../git/buildtree/tmp
 - [ ] Shareable Custom Dashboards
 - [ ] Better looking dashboards
 - [ ] Scheduled Builds
-- [ ] Synchronous Builds

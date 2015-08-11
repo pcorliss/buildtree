@@ -20,15 +20,4 @@ describe Build do
       build.enqueue!
     end
   end
-
-  describe "#set_hosting_status!" do
-    let(:user) { FactoryGirl.build(:user) }
-    let(:api) { GitApi.new(user) }
-
-    it "connects to the git api if not passed in"
-    it "connects to the git api via the repo followers"
-    it "connects to the git api via the next repo follower if not authorized"
-    # Octokit::NotFound
-    it "calls the api to set the status"
-  end
 end

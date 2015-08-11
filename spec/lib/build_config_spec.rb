@@ -79,9 +79,6 @@ describe BuildConfig do
     end
   end
 
-  # Need to figure this out
-  describe "#secrets"
-
   describe "#packages" do
     it "installs packages via apt or yum" do
       expected_install = <<-EOS

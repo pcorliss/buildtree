@@ -35,6 +35,13 @@ describe BuildJob do
       build_job.perform
     end
 
+    it "sets the sha of the build if it's not already set" do
+      build.sha = nil
+      expect_any_instance_of(GitApi).to receive(:head_sha).with(repo.short_name, build.branch).and_return("a"*40)
+      build_job.perform
+      expect(build.sha).to eq("a"*40)
+    end
+
     it "creates a temporary directory" do
       expect(Dir).to receive(:mktmpdir)
       build_job.perform
@@ -111,7 +118,5 @@ describe BuildJob do
     end
 
     it "sets success only after all parallel jobs are complete"
-    it "handles a null sha field by just checking out the head of the branch"
-
   end
 end
