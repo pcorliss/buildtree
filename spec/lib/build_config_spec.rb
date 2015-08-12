@@ -16,28 +16,61 @@ describe BuildConfig do
   context "dependent builds" do
     let(:build_config_fixture) { File.read('spec/fixtures/dependent_build_config.yml') }
 
-    describe "#start_parallel_builds"
-    describe "#start_dependent_builds"
     describe "#child_builds" do
-      it "returns a collection of new_record build jobs" do
+      it "returns a collection of build jobs" do
         child_builds = build_config.child_builds
 
-        expect(child_builds.map(&:class).uniq).to eq([Build])
-        expect(child_builds.all? {|b| b.new_record?}).to be_truthy
+        expect(child_builds).to be_a(Array)
+        expect(child_builds.map(&:repo).any?(&:nil?)).to be_falsey
       end
 
       it "returns an empty collection if there are no parallel builds and dependent builds" do
         expect(empty_build_config.child_builds).to eq([])
       end
 
-      it "sets the repo"
-      it "sets the parent build"
-      it "sets both static and dynamic env variables as a json string"
-      it "sets the parent sha and branch in the env variables"
-      it "sets the parallel build boolean to true for parallel builds"
-      it "sets the parallel build boolean to false for dependent builds"
-      it "sets the sub_project_path if it's a sub project build"
-      it "doesn't set the sub_project_path if it isn't a sub project build"
+      it "set repo information" do
+        child_builds = build_config.child_builds
+        first_build = child_builds.first
+        expect(first_build.repo.service).to eq('github')
+        expect(first_build.repo.organization).to eq('foo')
+        expect(first_build.repo.name).to eq('bar')
+      end
+
+      it "sets both static and dynamic env variables" do
+        child_builds = build_config.child_builds
+        first_build = child_builds.first
+        expect(first_build.env['PARENT_FOO']).to eq("$FOO")
+        expect(first_build.env['PARENT_BAR']).to eq("simple")
+      end
+
+      it "sets the parent sha and branch in the env variables" do
+        child_builds = build_config.child_builds
+        first_build = child_builds.first
+        expect(first_build.env['PARENT_SHA']).to eq('a'*40)
+        expect(first_build.env['PARENT_BRANCH']).to eq('master')
+      end
+
+      it "sets the parallel build boolean to true for parallel builds" do
+        child_builds = build_config.child_builds
+        expect(child_builds[0].parallel).to be_truthy
+        expect(child_builds[1].parallel).to be_truthy
+      end
+
+      it "sets the parallel build boolean to false for async builds" do
+        child_builds = build_config.child_builds
+        expect(child_builds[2].parallel).to be_falsey
+        expect(child_builds[3].parallel).to be_falsey
+      end
+
+      it "sets the sub_project_path if it's a sub project build" do
+        child_builds = build_config.child_builds
+        expect(child_builds[0].sub_project_path).to eq('some/path/inside/project/.bt.yml')
+      end
+
+      it "doesn't set the sub_project_path if it isn't a sub project build" do
+        child_builds = build_config.child_builds
+        expect(child_builds[1].sub_project_path).to be_nil
+      end
     end
   end
 

@@ -29,7 +29,6 @@ build_in_parallel:
   organization: foo
   name: bar
   branch: master
-  sha: abcdefg
   env:
     PARENT_FOO: $FOO
     PARENT_BAR: 'simple'
@@ -42,10 +41,6 @@ build_on_success:
   organization: foo
   name: bar
   branch: master
-  sha: abcdefg
-  env:
-    PARENT_FOO: $FOO
-    PARENT_BAR: 'simple'
 deploy:
   some_deployment_target:
     branch: master

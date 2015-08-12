@@ -107,14 +107,6 @@ EOS
     end
   end
 
-  def start_parallel_builds
-
-  end
-
-  def start_dependent_builds
-
-  end
-
   def child_builds
     parallel_build_configs = @config["build_in_parallel"] || []
     dependent_build_configs = @config["build_on_success"] || []
@@ -122,17 +114,49 @@ EOS
     children = []
 
     parallel_build_configs.each do |build|
-      children << Build.new
+      build = build_from_config(build)
+      build.parallel = true
+      children << build
     end
 
     dependent_build_configs.each do |build|
-      children << Build.new
+      build = build_from_config(build)
+      build.parallel = false
+      children << build
     end
 
     children
   end
 
   private
+
+  def build_from_config(config)
+    build = Hashie::Mash.new
+    build.repo = repo_from_config(config)
+    build.env = env_from_config(config)
+    build.sub_project_path = config['sub_project']
+    build
+  end
+
+  def repo_from_config(config)
+    repo = Hashie::Mash.new
+    if config['sub_project']
+      repo.organization, repo.name = @repo.split('/')
+      repo.service = 'github'
+    else
+      repo.service = config['service']
+      repo.organization = config['organization']
+      repo.name = config['name']
+    end
+    repo
+  end
+
+  def env_from_config(config)
+    env = Hashie::Mash.new(config['env'])
+    env['PARENT_SHA'] = @sha
+    env['PARENT_BRANCH'] = @branch
+    env
+  end
 
   def env_config
     return @env_config if @env_config
