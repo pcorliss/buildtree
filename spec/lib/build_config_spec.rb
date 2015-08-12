@@ -21,7 +21,7 @@ describe BuildConfig do
         child_builds = build_config.child_builds
 
         expect(child_builds).to be_a(Array)
-        expect(child_builds.map(&:repo).any?(&:nil?)).to be_falsey
+        expect(child_builds.any?(&:nil?)).to be_falsey
       end
 
       it "returns an empty collection if there are no parallel builds and dependent builds" do
@@ -30,10 +30,16 @@ describe BuildConfig do
 
       it "set repo information" do
         child_builds = build_config.child_builds
+        second_build = child_builds.second
+        expect(second_build.repo.service).to eq('github')
+        expect(second_build.repo.organization).to eq('foo')
+        expect(second_build.repo.name).to eq('bar')
+      end
+
+      it "doesn't set the repo information for sub project builds" do
+        child_builds = build_config.child_builds
         first_build = child_builds.first
-        expect(first_build.repo.service).to eq('github')
-        expect(first_build.repo.organization).to eq('foo')
-        expect(first_build.repo.name).to eq('bar')
+        expect(first_build.repo).to be_nil
       end
 
       it "sets both static and dynamic env variables" do

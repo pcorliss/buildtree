@@ -132,23 +132,14 @@ EOS
 
   def build_from_config(config)
     build = Hashie::Mash.new
-    build.repo = repo_from_config(config)
+    build.repo = repo_from_config(config) unless config['sub_project']
     build.env = env_from_config(config)
     build.sub_project_path = config['sub_project']
     build
   end
 
   def repo_from_config(config)
-    repo = Hashie::Mash.new
-    if config['sub_project']
-      repo.organization, repo.name = @repo.split('/')
-      repo.service = 'github'
-    else
-      repo.service = config['service']
-      repo.organization = config['organization']
-      repo.name = config['name']
-    end
-    repo
+    Hashie::Mash.new(config.slice('service', 'organization', 'name'))
   end
 
   def env_from_config(config)

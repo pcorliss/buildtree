@@ -117,6 +117,17 @@ describe BuildJob do
       expect(build.new_record?).to be_falsey
     end
 
-    it "sets success only after all parallel jobs are complete"
+    context "parallel builds" do
+      it "creates build objects"
+      it "enqueus build objects"
+      it "sets success only after all parallel jobs are complete"
+    end
+
+    context "after success builds" do
+      it "creates build objects"
+      it "enqueus build objects after success"
+      it "does not enqueu build objects if the build fails"
+      it "sets success independent of after success builds"
+    end
   end
 end

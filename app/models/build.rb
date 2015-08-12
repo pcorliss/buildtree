@@ -18,4 +18,8 @@ class Build < ActiveRecord::Base
   def enqueue!
     Delayed::Job.enqueue BuildJob.new(self)
   end
+
+  def self.new_from_config(config, parent)
+
+  end
 end
