@@ -113,6 +113,7 @@ TMPDIR=/Users/.../git/buildtree/tmp
 - [ ] Fail the build if there is an error of some sort
 - [ ] Save logs to S3 instead of the DB
 - [ ] Kitchen Sync Dockerfile Build
+- [ ] "forget about this build and cleanup after yourself” button
 - [ ] Create a repo query event which enques a build on repo creation. (Is this desired behavior with the build head button?)
 - [ ] add pagination repos show
 - [ ] UI Breadcrumbs
