@@ -18,6 +18,7 @@ describe BuildJob do
       allow(Rails.application.routes.url_helpers).to receive(:build_repos_url).and_return("http://example.com/")
       allow_any_instance_of(GitApi).to receive(:set_status)
       ENV['GIT_SSH_COMMAND'] = nil
+      build.save
     end
 
     after do
@@ -106,8 +107,7 @@ describe BuildJob do
     end
 
     it "uses the exit code of the docker container to set a failing repo status" do
-      mock_process = double(Process::Status, exitstatus: 1)
-      allow(build_job).to receive(:system_cmd).and_return(mock_process)
+      allow(build_job).to receive(:system_cmd).and_return(fail_process)
       build_job.perform
       expect(build.success?).to be_falsey
     end
@@ -118,15 +118,52 @@ describe BuildJob do
     end
 
     context "parallel builds" do
-      it "creates build objects"
-      it "enqueus build objects"
+      let(:build_config_fixture) { File.read('spec/fixtures/parallel_build_config.yml') }
+
+      before do
+        allow(Delayed::Job).to receive(:enqueue)
+      end
+
+      it "creates build objects" do
+        expect do
+          build_job.perform
+        end.to change{Build.count}.by(2)
+      end
+
+      it "enqueus build objects" do
+        expect(Delayed::Job).to receive(:enqueue).twice
+        build_job.perform
+      end
+
       it "sets success only after all parallel jobs are complete"
     end
 
     context "after success builds" do
-      it "creates build objects"
-      it "enqueus build objects after success"
-      it "does not enqueu build objects if the build fails"
+      let(:build_config_fixture) { File.read('spec/fixtures/after_success_build_config.yml') }
+
+      before do
+        allow(Delayed::Job).to receive(:enqueue)
+      end
+
+      it "creates build objects" do
+        expect do
+          build_job.perform
+        end.to change{Build.count}.by(2)
+      end
+
+      it "enqueus build objects" do
+        expect(Delayed::Job).to receive(:enqueue).twice
+        build_job.perform
+      end
+
+      it "does not enqueue build objects if the build fails" do
+        allow(build_job).to receive(:run_docker_container).and_return(fail_process)
+
+        expect do
+          build_job.perform
+        end.to_not change{Build.count}
+      end
+
       it "sets success independent of after success builds"
     end
   end

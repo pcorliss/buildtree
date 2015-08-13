@@ -21,30 +21,32 @@ class BuildJob
       write_private_key(dir)
       return short_circuit! if short_circuit?(git_clone(dir))
       return short_circuit! if short_circuit?(git_checkout(dir))
-      start_parallel_builds
+      start_parallel_builds(build_config(dir))
       build_config(dir).write("#{dir}/bt.sh")
       return short_circuit! if short_circuit?(run_docker_container(dir))
       set_status(:success)
-      start_dependent_builds
+      start_dependent_builds(build_config(dir))
     end
   end
 
   private
 
-  def start_parallel_builds
-    #build_config.child_builds.select(&:parallel) do |child|
-      #build = Build.new_from_config(child, build_config)
-      #build.enqueue!
+  def start_parallel_builds(config)
+    config.child_builds.select(&:parallel).each do |child|
+      build = Build.new_from_config(child, @build)
+      build.save
+      build.enqueue!
       # set children and wait???
-    #end
+    end
   end
 
-  def start_dependent_builds
-    #build_config.child_builds.reject(&:parallel) do |child|
-      #build = Build.new_from_config(child, build_config)
-      #build.enqueue!
-    # =># set children and don't wait
-    #end
+  def start_dependent_builds(config)
+    config.child_builds.reject(&:parallel).each do |child|
+      build = Build.new_from_config(child, @build)
+      build.save
+      build.enqueue!
+      # set children and don't wait
+    end
   end
 
   def set_sha

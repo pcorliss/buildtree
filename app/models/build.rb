@@ -20,8 +20,6 @@ class Build < ActiveRecord::Base
   end
 
   def self.new_from_config(config, parent)
-    #config.repo ? Repo.find_by(config.repo) : parent.repo
-
     Build.new(
       parent: parent,
       top_parent: parent.top_parent,
