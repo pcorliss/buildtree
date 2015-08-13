@@ -36,7 +36,6 @@ class BuildJob
       build = Build.new_from_config(child, @build)
       build.save
       build.enqueue!
-      # set children and wait???
     end
   end
 
@@ -45,7 +44,6 @@ class BuildJob
       build = Build.new_from_config(child, @build)
       build.save
       build.enqueue!
-      # set children and don't wait
     end
   end
 

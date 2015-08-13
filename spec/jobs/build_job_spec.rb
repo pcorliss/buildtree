@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe BuildJob do
   let(:repo) { FactoryGirl.build(:private_key_repo, users: [user]) }
-  let(:build) { FactoryGirl.build(:build, repo: repo, status: 0, build_status: 0) }
+  let(:build) { FactoryGirl.build(:build, repo: repo, status: 0) }
   let(:user) { FactoryGirl.build(:user) }
   let(:build_job) { BuildJob.new(build) }
   let(:tmpdir) { Dir.mktmpdir('build_job_spec') }
@@ -134,8 +134,6 @@ describe BuildJob do
         expect(Delayed::Job).to receive(:enqueue).twice
         build_job.perform
       end
-
-      it "sets success only after all parallel jobs are complete"
     end
 
     context "after success builds" do
@@ -163,8 +161,6 @@ describe BuildJob do
           build_job.perform
         end.to_not change{Build.count}
       end
-
-      it "sets success independent of after success builds"
     end
   end
 end
