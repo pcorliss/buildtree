@@ -20,6 +20,17 @@ class Build < ActiveRecord::Base
   end
 
   def self.new_from_config(config, parent)
+    #config.repo ? Repo.find_by(config.repo) : parent.repo
 
+    Build.new(
+      parent: parent,
+      top_parent: parent.top_parent,
+      env: config.env.to_json,
+      parallel: config.parallel,
+      repo: config.repo ? Repo.find_by(config.repo) : parent.repo,
+      branch: config.branch,
+      sha: parent.sha,
+      sub_project_path: config.sub_project_path,
+    )
   end
 end

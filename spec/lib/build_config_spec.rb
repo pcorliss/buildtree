@@ -56,6 +56,11 @@ describe BuildConfig do
         expect(first_build.env['PARENT_BRANCH']).to eq('master')
       end
 
+      it "sets the branch" do
+        child_builds = build_config.child_builds
+        expect(child_builds.map(&:branch).uniq).to eq(['master'])
+      end
+
       it "sets the parallel build boolean to true for parallel builds" do
         child_builds = build_config.child_builds
         expect(child_builds[0].parallel).to be_truthy

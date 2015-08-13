@@ -134,6 +134,7 @@ EOS
     build = Hashie::Mash.new
     build.repo = repo_from_config(config) unless config['sub_project']
     build.env = env_from_config(config)
+    build.branch = config['branch'] || @branch
     build.sub_project_path = config['sub_project']
     build
   end
