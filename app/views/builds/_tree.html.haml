@@ -1,0 +1,12 @@
+%ul
+  - builds.each do |build|
+    - repo = build.repo
+    - path = build_repos_path(repo.to_params.symbolize_keys.merge(id: build.id))
+    - sub_project_or_repo = build.sub_project_path || build.repo.short_name
+    %li
+      = link_to path do
+        = build_status(build.status)
+        = sub_project_or_repo
+      - if build.children.present?
+        -#TODO nice little N+1 query you got there
+        = render partial: "tree", locals: {builds: build.children}

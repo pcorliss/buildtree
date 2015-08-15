@@ -6,13 +6,4 @@
   %td= link_to build.branch, path
   %td= link_to build.short_sha, path
   %td= link_to build.created_at, path
-  - if build.pending?
-    %td= link_to fa_icon("cog spin fw"), path
-  - elsif build.queued?
-    %td= fa_icon "clock-o fw"
-  - elsif build.success?
-    %td.text-success= link_to fa_icon("check fw"), path
-  - elsif build.failure?
-    %td.text-danger= link_to fa_icon("times fw"), path
-  - else
-    %td.text-danger= link_to fa_icon("exclamation-triangle fw"), path
+  %td= link_to build_status(build.status), path

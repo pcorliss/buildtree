@@ -16,23 +16,22 @@
     %dt Created
     %dd= @build.created_at
 
-    %dt Status
-    - if @build.pending?
-      %dd= fa_icon "cog spin"
-    - elsif @build.queued?
-      %dd= fa_icon "clock-o"
-    - elsif @build.success?
-      %dd.text-success= fa_icon "check"
-    - elsif @build.failure?
-      %dd.text-danger= fa_icon "times"
-    - else
-      %dd.text-danger= fa_icon "exclamation-triangle"
+    %dt Overall Status
+    %dd
+      = build_status(@build.status)
+      TODO make this represent the tree
+
+    %dt Build Status
+    %dd= build_status(@build.status)
 
     %dt Git
     %dd= link_to @repo.external_url, @repo.external_url
 
     %dt All builds
     %dd= link_to @repo.builds.count, repo_path(@repo)
+
+    %dt BuildTree
+    %dd= render partial: "tree", locals: {builds: [@build]}
 
   %legend Build Log
 
