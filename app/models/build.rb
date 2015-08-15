@@ -1,6 +1,8 @@
 class Build < ActiveRecord::Base
   enum status: [ :queued, :success, :pending, :failure, :error ]
 
+  STATUS_HIERARCHY = [:error, :failure, :pending, :queued, :success]
+
   belongs_to :repo
   has_many :build_logs
 
@@ -16,6 +18,21 @@ class Build < ActiveRecord::Base
 
   def enqueue!
     Delayed::Job.enqueue BuildJob.new(self)
+  end
+
+  def overall_status
+    statuses = children_statuses << self.status
+    statuses.uniq!
+    STATUS_HIERARCHY.each do |status|
+      return status.to_s if statuses.include?(status.to_s)
+    end
+    return self.status
+  end
+
+  def children_statuses
+    self.children.map do |child|
+      child.overall_status
+    end
   end
 
   def self.new_from_config(config, parent)

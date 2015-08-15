@@ -21,6 +21,80 @@ describe Build do
     end
   end
 
+  describe "#overall_status" do
+    let(:build_error) { FactoryGirl.build(:build, repo: nil, status: 'error') }
+    let(:build_failure) { FactoryGirl.build(:build, repo: nil, status: 'failure') }
+    let(:build_pending) { FactoryGirl.build(:build, repo: nil, status: 'pending') }
+    let(:build_queued) { FactoryGirl.build(:build, repo: nil, status: 'queued') }
+    let(:build_success) { FactoryGirl.build(:build, repo: nil, status: 'success') }
+    let(:builds) { [build_error, build_failure, build_pending, build_queued, build_success] }
+
+
+    it "returns the current build status if there are no children" do
+      expect(builds).to_not be_empty
+      builds.each do |build|
+        expect(build.children).to be_empty
+        expect(build.overall_status).to eq(build.status)
+      end
+    end
+
+    context "child_builds" do
+      before do
+        last_build = nil
+        builds.each do |build|
+          if last_build
+            last_build.children << build
+          end
+          last_build = build
+        end
+      end
+
+      it "returns error if one of the children errored" do
+        expect(builds.first.overall_status).to eq('error')
+      end
+
+      it "returns failure if one of the children failed but no errors" do
+        builds.reject! { |b| b.error? }
+        expect(builds.first.overall_status).to eq('failure')
+      end
+
+      it "returns pending if one of the children pending but no fail or errors" do
+        builds.reject! { |b| b.error? || b.failure? }
+        expect(builds.first.overall_status).to eq('pending')
+      end
+
+      it "returns queued if one of the children queued but no fail or errors or pending" do
+        builds.reject! { |b| b.error? || b.failure? || b.pending? }
+        expect(builds.first.overall_status).to eq('queued')
+      end
+
+      it "returns success if all of the children are successful" do
+        builds.reject! { |b| b.error? || b.failure? || b.pending? || b.queued? }
+        expect(builds.first.overall_status).to eq('success')
+      end
+    end
+  end
+
+  describe "#children_status" do
+    let(:build_error) { FactoryGirl.build(:build, repo: nil, status: 'error') }
+    let(:build_failure) { FactoryGirl.build(:build, repo: nil, status: 'failure') }
+    let(:build_pending) { FactoryGirl.build(:build, repo: nil, status: 'pending') }
+    let(:build_queued) { FactoryGirl.build(:build, repo: nil, status: 'queued') }
+    let(:build_success) { FactoryGirl.build(:build, repo: nil, status: 'success') }
+    let(:builds) { [build_error, build_failure, build_pending, build_queued, build_success] }
+
+    it "returns a map of all immediate child statuses" do
+      build.children = builds
+      expect(build.children_statuses).to eq(%w(
+        error
+        failure
+        pending
+        queued
+        success
+      ))
+    end
+  end
+
   describe "#self.new_from_config" do
     let(:repo) { FactoryGirl.build(:repo) }
     let(:top_parent) { FactoryGirl.build(:build, repo: repo) }
