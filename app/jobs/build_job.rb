@@ -35,6 +35,7 @@ class BuildJob
     config.child_builds.select(&:parallel).each do |child|
       build = Build.new_from_config(child, @build)
       build.save
+
       build.enqueue!
     end
   end
@@ -58,15 +59,19 @@ class BuildJob
   def set_status(status)
     @build.status = status
     @build.save
-    @auth_user = GitApi.with_authorized_users(authorized_users) do |api|
-      api.set_status(
-        repo: @repo.short_name,
-        sha: @build.sha,
-        status: status,
-        description: STATUS_TO_DESCRIPTION[status],
-        context: "BuildTree",
-        target_url: build_url,
-      )
+    begin
+      @auth_user = GitApi.with_authorized_users(authorized_users) do |api|
+        api.set_status(
+          repo: @repo.short_name,
+          sha: @build.sha,
+          status: status,
+          description: STATUS_TO_DESCRIPTION[status],
+          context: "BuildTree",
+          target_url: build_url,
+        )
+      end
+    rescue Octokit::ClientError => e
+      Rails.logger.error e.exception.inspect
     end
   end
 
@@ -108,8 +113,10 @@ class BuildJob
   end
 
   def build_config(dir)
+    config_file_path = "#{dir}/source/#{@build.sub_project_path || '.bt.yml'}"
+
     @build_config ||= BuildConfig.new(
-      config: File.read("#{dir}/source/.bt.yml"),
+      config: File.read(config_file_path),
       repo: @repo.short_name,
       branch: @build.branch,
       sha: @build.sha,

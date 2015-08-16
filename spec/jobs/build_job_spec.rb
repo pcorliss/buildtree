@@ -36,6 +36,13 @@ describe BuildJob do
       build_job.perform
     end
 
+    it "doesn't fail the build if it can't set the status on github" do
+      allow_any_instance_of(GitApi).to receive(:set_status).and_raise(Octokit::UnprocessableEntity)
+      expect do
+        build_job.perform
+      end.to_not raise_error
+    end
+
     it "sets the sha of the build if it's not already set" do
       build.sha = nil
       expect_any_instance_of(GitApi).to receive(:head_sha).with(repo.short_name, build.branch).and_return("a"*40)
@@ -93,6 +100,12 @@ describe BuildJob do
       script_path = "#{tmpdir}/bt.sh"
       expect(File.exists?(script_path)).to be_truthy
       expect(File.stat(script_path).mode).to eq(0100755)
+    end
+
+    it "generates a config from the subproject path config" do
+      build.sub_project_path = "foo/bar/foo/.bt.yml"
+      expect(File).to receive(:read).with("#{tmpdir}/source/foo/bar/foo/.bt.yml").and_return(build_config_fixture)
+      build_job.perform
     end
 
     it "runs docker container" do

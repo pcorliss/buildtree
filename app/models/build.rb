@@ -41,9 +41,12 @@ class Build < ActiveRecord::Base
       top_parent: parent.top_parent,
       env: config.env.to_json,
       parallel: config.parallel,
+      # TODO this should find_or_create_by
+      # TODO what happens when this is a public repo?
+      # TODO can we differentiate the two effectively
       repo: config.repo ? Repo.find_by(config.repo) : parent.repo,
       branch: config.branch,
-      sha: parent.sha,
+      sha: config.sub_project_path ? parent.sha : nil,
       sub_project_path: config.sub_project_path,
     )
   end

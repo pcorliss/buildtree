@@ -30,6 +30,7 @@ class ReposController < ApplicationController
   end
 
   def show
+    @builds = @repo.builds.order('id desc')
   end
 
   def webhook

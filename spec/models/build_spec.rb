@@ -99,32 +99,28 @@ describe Build do
     let(:repo) { FactoryGirl.build(:repo) }
     let(:top_parent) { FactoryGirl.build(:build, repo: repo) }
     let(:parent) { FactoryGirl.build(:build, repo: repo, parent: top_parent, top_parent: top_parent) }
+    let(:build) { build = Build.new_from_config(config, parent) }
 
     shared_examples "configuring a build" do
       it "returns a build object" do
-        build = Build.new_from_config(config, parent)
         expect(build).to be_a(Build)
       end
 
       it "sets the parent" do
-        build = Build.new_from_config(config, parent)
         expect(build.parent).to eq(parent)
       end
 
       it "sets the top_parent from the parent" do
-        build = Build.new_from_config(config, parent)
         expect(build.top_parent).to eq(top_parent)
       end
 
       it "sets the env as a json string" do
-        build = Build.new_from_config(config, parent)
         build_env = JSON.parse(build.env)
         expect(build_env['PARENT_SHA']).to eq('a'*40)
         expect(build_env['PARENT_BRANCH']).to eq('master')
       end
 
       it "sets the parallel boolean" do
-        build = Build.new_from_config(config, parent)
         expect(build.parallel).to be_truthy
       end
     end
@@ -143,23 +139,19 @@ describe Build do
       include_examples "configuring a build"
 
       it "sets the repo from the parent" do
-        build = Build.new_from_config(config, parent)
         expect(build.repo).to eq(repo)
       end
 
       it "sets the branch from the parent" do
-        build = Build.new_from_config(config, parent)
         expect(build.branch).to eq('foo')
       end
 
       it "sets the sha from the parent" do
         parent.sha = 'b'*40
-        build = Build.new_from_config(config, parent)
         expect(build.sha).to eq('b'*40)
       end
 
       it "sets the sub project path" do
-        build = Build.new_from_config(config, parent)
         expect(build.sub_project_path).to eq('some/path/.bt.yml')
       end
     end
@@ -188,18 +180,19 @@ describe Build do
       include_examples "configuring a build"
 
       it "sets the repo from the passed values" do
-        build = Build.new_from_config(config, parent)
         expect(build.repo).to eq(project_repo)
       end
 
       it "sets the branch from the passed values" do
-        build = Build.new_from_config(config, parent)
         expect(build.branch).to eq('foo')
       end
 
       it "doesn't set the sub project path" do
-        build = Build.new_from_config(config, parent)
         expect(build.sub_project_path).to be_nil
+      end
+
+      it "sets the sha to nil" do
+        expect(build.sha).to be_nil
       end
     end
   end

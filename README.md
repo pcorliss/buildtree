@@ -106,7 +106,15 @@ TMPDIR=/Users/.../git/buildtree/tmp
 #### TODOs for future releases
 - [ ] Dependent Builds
   - [x] Nullable SHA field required for dependent builds
+  - [ ] Bug: Don't retry a failed build, just mark it as failed
+  - [x] Bug: Display Builds in reverse order
+  - [ ] Bug: Untracked Repos will fail
+  - [ ] Bug: Should fail if repo can't be found
+  - [x] Bug: subprojects don't work at all
+  - [x] Bug: Status update no commit found for ...
+  - [x] Bug: Same sha as parent used
 - [ ] Synchronous Builds
+- [ ] Refactor BuildJob into easier to test modules
 - [ ] Github Enterprise Support
 - [ ] Setup Websocket communication between front-end and builder
 - [ ] Setup Websocket communication between front-end and client
