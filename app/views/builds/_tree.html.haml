@@ -1,4 +1,4 @@
-%ul
+%ul.tree
   - builds.each do |build|
     - repo = build.repo
     - path = build_repos_path(repo.to_params.symbolize_keys.merge(id: build.id))
