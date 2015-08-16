@@ -9,9 +9,6 @@ class Build < ActiveRecord::Base
   belongs_to :parent, foreign_key: :parent_id, class_name: Build
   has_many :children, foreign_key: :parent_id, class_name: Build
 
-  belongs_to :top_parent, foreign_key: :top_parent_id, class_name: Build
-  has_many :descendents, foreign_key: :top_parent_id, class_name: Build
-
   def short_sha
     self.sha.first(7) if self.sha
   end
@@ -41,7 +38,6 @@ class Build < ActiveRecord::Base
 
     Build.new(
       parent: parent,
-      top_parent: parent.top_parent, # TODO kill this
       env: config.env.to_json,
       parallel: config.parallel,
       # TODO this should find_or_create_by

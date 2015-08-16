@@ -98,8 +98,8 @@ describe Build do
   describe "#self.new_from_config" do
     let(:repo) { FactoryGirl.build(:repo) }
     let(:top_parent) { FactoryGirl.build(:build, repo: repo) }
-    let(:parent) { FactoryGirl.build(:build, repo: repo, parent: top_parent, top_parent: top_parent) }
-    let(:build) { build = Build.new_from_config(config, parent) }
+    let(:parent) { FactoryGirl.build(:build, repo: repo, parent: top_parent) }
+    let(:build) { Build.new_from_config(config, parent) }
 
     shared_examples "configuring a build" do
       it "returns a build object" do
@@ -108,10 +108,6 @@ describe Build do
 
       it "sets the parent" do
         expect(build.parent).to eq(parent)
-      end
-
-      it "sets the top_parent from the parent" do
-        expect(build.top_parent).to eq(top_parent)
       end
 
       it "sets the env as a json string" do
