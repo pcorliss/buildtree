@@ -36,15 +36,18 @@ class Build < ActiveRecord::Base
   end
 
   def self.new_from_config(config, parent)
+    repo = config.repo ? Repo.find_by(config.repo) : parent.repo
+    return nil unless repo
+
     Build.new(
       parent: parent,
-      top_parent: parent.top_parent,
+      top_parent: parent.top_parent, # TODO kill this
       env: config.env.to_json,
       parallel: config.parallel,
       # TODO this should find_or_create_by
       # TODO what happens when this is a public repo?
       # TODO can we differentiate the two effectively
-      repo: config.repo ? Repo.find_by(config.repo) : parent.repo,
+      repo: repo,
       branch: config.branch,
       sha: config.sub_project_path ? parent.sha : nil,
       sub_project_path: config.sub_project_path,

@@ -28,6 +28,14 @@ describe BuildJob do
       ENV['GIT_SSH_COMMAND'] = nil
     end
 
+    it "sets the status to error if there was an exception" do
+      allow(build_job).to receive(:write_private_key).and_raise(StandardError)
+      expect do
+        build_job.perform
+      end.to_not raise_error
+      expect(build.status).to eq('error')
+    end
+
     it "sets the build status multiple times during run" do
       expect(build_job).to receive(:set_status).with(:pending).once
       expect(build_job).to receive(:set_status).with(:success).once
@@ -130,49 +138,67 @@ describe BuildJob do
       expect(build.new_record?).to be_falsey
     end
 
-    context "parallel builds" do
-      let(:build_config_fixture) { File.read('spec/fixtures/parallel_build_config.yml') }
-
+    context "dependent builds" do
       before do
         allow(Delayed::Job).to receive(:enqueue)
       end
 
-      it "creates build objects" do
-        expect do
-          build_job.perform
-        end.to change{Build.count}.by(2)
+      # This can happen if a dependent build isn't yet in the system
+      context "without a repo" do
+        let(:build_config_fixture) { File.read('spec/fixtures/parallel_build_config.yml') }
+
+        it "ignores the build if it doesn't have a repo" do
+          expect do
+            build_job.perform
+          end.to change{Build.count}.by(1)
+          expect(Build.all.map(&:repo).any?(&:nil?)).to be_falsey
+        end
       end
 
-      it "enqueus build objects" do
-        expect(Delayed::Job).to receive(:enqueue).twice
-        build_job.perform
-      end
-    end
+      context "with a repo" do
+        let(:repo) { FactoryGirl.create(:private_key_repo, organization: 'foo', name: 'bar') }
 
-    context "after success builds" do
-      let(:build_config_fixture) { File.read('spec/fixtures/after_success_build_config.yml') }
+        before do
+          repo
+        end
 
-      before do
-        allow(Delayed::Job).to receive(:enqueue)
-      end
+        context "parallel builds" do
+          let(:build_config_fixture) { File.read('spec/fixtures/parallel_build_config.yml') }
 
-      it "creates build objects" do
-        expect do
-          build_job.perform
-        end.to change{Build.count}.by(2)
-      end
+          it "creates build objects" do
+            expect do
+              build_job.perform
+            end.to change{Build.count}.by(2)
+          end
 
-      it "enqueus build objects" do
-        expect(Delayed::Job).to receive(:enqueue).twice
-        build_job.perform
-      end
+          it "enqueus build objects" do
+            expect(Delayed::Job).to receive(:enqueue).twice
+            build_job.perform
+          end
+        end
 
-      it "does not enqueue build objects if the build fails" do
-        allow(build_job).to receive(:run_docker_container).and_return(fail_process)
+        context "after success builds" do
+          let(:build_config_fixture) { File.read('spec/fixtures/after_success_build_config.yml') }
+          it "creates build objects" do
+            expect do
+              build_job.perform
+            end.to change{Build.count}.by(2)
+          end
 
-        expect do
-          build_job.perform
-        end.to_not change{Build.count}
+          it "enqueus build objects" do
+            expect(Delayed::Job).to receive(:enqueue).twice
+            build_job.perform
+          end
+
+          it "does not enqueue build objects if the build fails" do
+            allow(build_job).to receive(:run_docker_container).and_return(fail_process)
+
+            expect do
+              build_job.perform
+            end.to_not change{Build.count}
+          end
+
+        end
       end
     end
   end

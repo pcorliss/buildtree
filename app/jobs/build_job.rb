@@ -27,25 +27,32 @@ class BuildJob
       set_status(:success)
       start_dependent_builds(build_config(dir))
     end
+  rescue => e
+    Rails.logger.error e.exception.inspect
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace
+    set_status(:error)
   end
 
   private
 
   def start_parallel_builds(config)
     config.child_builds.select(&:parallel).each do |child|
-      build = Build.new_from_config(child, @build)
-      build.save
-
-      build.enqueue!
+      enqueue_child_build(child)
     end
   end
 
   def start_dependent_builds(config)
     config.child_builds.reject(&:parallel).each do |child|
-      build = Build.new_from_config(child, @build)
-      build.save
-      build.enqueue!
+      enqueue_child_build(child)
     end
+  end
+
+  def enqueue_child_build(child)
+    build = Build.new_from_config(child, @build)
+    return unless build
+    build.save
+    build.enqueue!
   end
 
   def set_sha

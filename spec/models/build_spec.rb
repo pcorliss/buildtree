@@ -194,6 +194,16 @@ describe Build do
       it "sets the sha to nil" do
         expect(build.sha).to be_nil
       end
+
+      it "returns nil if the repo can't be found" do
+        config.repo = Hashie::Mash.new({
+          service: 'github',
+          organization: 'missing',
+          name: 'missing',
+        })
+
+        expect(build).to be_nil
+      end
     end
   end
 end
