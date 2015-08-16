@@ -2,11 +2,10 @@ source 'https://rubygems.org'
 
 
 gem 'rails', '~> 4.2.3'
-gem 'pg'
+gem 'pg', '~> 0.18.2'
 gem 'coffee-rails', '~> 4.1.0'
 gem 'jquery-rails'
 gem 'jbuilder', '~> 2.0'
-gem 'unicorn'
 
 gem 'omniauth', '~> 1.2.1'
 gem 'omniauth-oauth2', '~> 1.1.2'
@@ -29,7 +28,11 @@ group :development do
   gem 'spring'
   gem 'spring-commands-rspec'
   gem 'guard-rspec'
-  gem 'rb-fsevent' if `uname` =~ /Darwin/
+end
+
+# run `bundle install --without darwin` for non-macs
+group :development, :darwin do
+  gem 'rb-fsevent'
 end
 
 group :development, :test do
@@ -45,7 +48,6 @@ group :test do
   gem 'rake', '~> 10.4.2'
   gem 'webmock'
   gem 'simplecov', :require => false
-  # 1.29s
 end
 
 group :production do
