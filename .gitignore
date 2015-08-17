@@ -11,6 +11,6 @@
 /log/*
 !/log/.keep
 /tmp
-.env
+.env*
 coverage
 .DS_Store

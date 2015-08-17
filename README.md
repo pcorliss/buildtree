@@ -28,6 +28,7 @@ POSTGRES_PORT=5433
 POSTGRES_DATABASE=buildtree_production
 POSTGRES_USER=buildtree
 POSTGRES_PASS=<Generated random phrase, recomended 40 chars>
+DEFAULT_HOST=<example.com>
 ```
 
 ### Create Database
@@ -77,6 +78,14 @@ DEFAULT_HOST=localhost:3000
 TMPDIR=/Users/.../git/buildtree/tmp
 ```
 
+## Docker compose running
+
+docker-compose up -d db
+docker-compose run app bundle exec rake db:migrate
+docker-compose up --no-recreate
+
+Requires >= git 2.3
+
 ### TODOs before 0.1.0 release
 - [x] Flush user_repos cache every 24 hours
 - [x] a usable UI
@@ -102,7 +111,13 @@ TMPDIR=/Users/.../git/buildtree/tmp
 - [x] Destroy docker instance after running
 - [x] After Success and Parallel Builds
 - [ ] Installation documentation
-  - [ ] Dockerize
+  - [x] Dockerize
+  - [ ] Dockerhub
+  - [x] Docker Compose
+    - [x] Fix Assets
+    - [ ] Default Host - Maybe we could make this get the FQDN on boot
+  - [ ] Docker Compose Example
+  - [ ] Terraform
 
 #### TODOs for future releases
 - [ ] Synchronous Builds
@@ -115,6 +130,7 @@ TMPDIR=/Users/.../git/buildtree/tmp
 - [ ] Fail the build if there is an error of some sort
 - [ ] Save logs to S3 instead of the DB
 - [ ] Kitchen Sync Dockerfile Build
+- [ ] SSL Config without forking
 - [ ] "forget about this build and cleanup after yourself” button
 - [ ] Create a repo query event which enques a build on repo creation. (Is this desired behavior with the build head button?)
 - [ ] add pagination repos show

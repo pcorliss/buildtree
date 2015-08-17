@@ -107,7 +107,7 @@ class BuildJob
     File.open("#{dir}/private_key.pem", 'w') do |fh|
       fh.chmod(0600)
       fh.write SSHKey.new(@repo.private_key, passphrase: ENV['SSH_PASSPHRASE']).private_key
-      ENV['GIT_SSH_COMMAND'] = "ssh -i #{fh.path}"
+      @git_ssh_cmd = "GIT_SSH_COMMAND='ssh -i #{fh.path}'"
     end
   end
 
@@ -138,7 +138,9 @@ class BuildJob
   # IO Select usage cargo culted from https://gist.github.com/chrisn/7450808
   def system_cmd(cmd)
     exit_val = nil
-    Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thr|
+    cmd_to_run = cmd
+    cmd_to_run = "#{@git_ssh_cmd} #{cmd}" if cmd.start_with? 'git'
+    Open3.popen3(cmd_to_run) do |stdin, stdout, stderr, wait_thr|
       stdin.close
 
       block_size = 1
@@ -175,7 +177,7 @@ class BuildJob
       exit_val = wait_thr.value
       @build.build_logs.create(
         text: output_buffer.to_json,
-        cmd: cmd,
+        cmd: cmd_to_run,
         exit_code: exit_val,
       )
     end

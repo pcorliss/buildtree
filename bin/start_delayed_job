@@ -1,0 +1,4 @@
+#/bin/bash
+
+/etc/init.d/docker start
+./bin/delayed_job run --sleep-delay 5

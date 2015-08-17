@@ -74,7 +74,7 @@ describe BuildJob do
       end
       expect(SSHKey.new(private_key).fingerprint).to eq(repo.fingerprint)
       expect(File.stat(private_key_path).mode).to eq(0100600)
-      expect(ENV['GIT_SSH_COMMAND']).to eq("ssh -i #{private_key_path}")
+      expect(build_job.instance_variable_get('@git_ssh_cmd')).to eq("GIT_SSH_COMMAND='ssh -i #{private_key_path}'")
     end
 
     it "executes a git clone operation" do
