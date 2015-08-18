@@ -9,82 +9,60 @@ BuildTree is an open source continous integration service.
 * Builds are isolated from one another
 * Docker based build images
 * Code based configuration of builds
+* Parallel and After Success Builds
+* SubProject builds
 
-## Installation
+## Local Development
+
+### Required Keys/Tokens
 
 Generate OAuth Keys [via Github](https://github.com/settings/applications/new)
-Generate random passphrase
-Set Env Variables via .env file (see the following list)
-Enable SSL
+
+Use `http://<hostname>:<port>/` and `http://<hostname>:<port>/auth` as
+your Homepage and Callback URL.
+
+### Local Dev Machine Setup
 
 ```
-GITHUB_HOST=<GHE Enterprise or Github>
-GITHUB_KEY=<Application Key>
-GITHUB_SECRET=<Application Secret>
-SSH_KEY_SIZE=4096 # Recomended Default but a little slow
-SSH_PASSPHRASE=<Generated random phrase, recomended 40 chars>
-POSTGRES_HOST=<Postgres Host>
-POSTGRES_PORT=5433
-POSTGRES_DATABASE=buildtree_production
-POSTGRES_USER=buildtree
-POSTGRES_PASS=<Generated random phrase, recomended 40 chars>
-DEFAULT_HOST=<example.com>
-```
-
-### Create Database
-
-```
-docker run -d --env-file=<env-file> pcorliss/buildtree
-```
-
-### On Build Machines
-
-```
-docker run -d --env-file=<env-file> --privileged pcorliss/buildtree bin/delayed_job
--n <workers> --sleep-delay=10
-```
-
-## Development
-
-```
+# Update .env with GITHUB_KEY and GITHUB_SECRET
+cp .env.example .env
 # Start Postgres
+# Create a buildtree user with permissions
 createuser --createdb buildtree
 
 git clone https://github.com/pcorliss/buildtree.git
 cd buildtree
 
-# RVM recomended but as long as ruby-2.2.1 is installed you should be okay
+# RVM is what I use but as long as ruby-2.2.1 is installed you should be okay
 bundle install
 rake db:create:all
 rake db:migrate
 
-rspec
+spring rspec
 rails server
+
+# Build Worker Requires
+# >= git 2.3
+# Running docker host `docker ps -a`
+./bin/delayed_job run --sleep-delay=5
 ```
 
-## Environment Variables
-
-Customize your experience by setting environment variables
+## Running BuildTree via Docker Compose on a Single Host
 
 ```
-RACK_ENV=development
-PORT=3000
-GITHUB_HOST=...
-GITHUB_KEY=<Your Github Key>
-GITHUB_SECRET=<Your Github Secret>
-SSH_KEY_SIZE=4096
-SSH_PASSPHRASE=hello world
-DEFAULT_HOST=localhost:3000
-TMPDIR=/Users/.../git/buildtree/tmp
+rake secret # SECRET_KEY_BASE
+pwgen -s1 16 # POSTGRES_PASS & POSTGRES_PASSWORD
+pwgen -s1 16 # SSH_PASSPHRASE
+host -f # DEFAULT_HOST
+
+cp docker-compose.yml.example my-buildtree.yml
+cp .env-compose.example .env-compose
+
+# If using boot2docker set DEFAULT_HOST to the hostname of your VM
+docker-compose -f my-buildtree.yml up -d db
+docker-compose -f my-buildtree.yml run app bundle exec rake db:migrate
+docker-compose -f my-buildtree.yml up --no-recreate
 ```
-
-## Docker compose running
-
-docker-compose up -d db
-docker-compose run app bundle exec rake db:migrate
-docker-compose up --no-recreate
-
-Requires >= git 2.3
 
 ### TODOs before 0.1.0 release
 - [x] Flush user_repos cache every 24 hours
@@ -116,8 +94,10 @@ Requires >= git 2.3
   - [x] Docker Compose
     - [x] Fix Assets
     - [ ] Default Host - Maybe we could make this get the FQDN on boot
-  - [ ] Docker Compose Example
+  - [x] Docker Compose Example
   - [ ] Terraform
+- [ ] Tag
+- [ ] Screenshots
 
 #### TODOs for future releases
 - [ ] Synchronous Builds

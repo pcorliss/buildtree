@@ -1,0 +1,19 @@
+db:
+  image: postgres
+  env_file: .env-compose
+  ports:
+    - "5433:5432"
+app:
+  image: pcorliss/buildtree
+  ports:
+    - "80:80"
+  links:
+    - db
+  env_file: .env-compose
+worker:
+  privileged: true
+  image: pcorliss/buildtree
+  command: "bundle exec bin/start_delayed_job"
+  links:
+    - db
+  env_file: .env-compose
