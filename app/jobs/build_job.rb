@@ -83,7 +83,12 @@ class BuildJob
   end
 
   def build_url
-    Rails.application.routes.url_helpers.build_repos_url(@repo.to_params.symbolize_keys.merge(id: @build.id, host: ENV['DEFAULT_HOST']))
+    Rails.application.routes.url_helpers.build_repos_url(
+      @repo.to_params.symbolize_keys.merge(
+        id: @build.id,
+        host: Rails.application.routes.default_url_options[:host]
+      )
+    )
   end
 
   def authorized_users

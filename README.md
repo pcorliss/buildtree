@@ -53,12 +53,12 @@ rails server
 rake secret # SECRET_KEY_BASE
 pwgen -s1 16 # POSTGRES_PASS & POSTGRES_PASSWORD
 pwgen -s1 16 # SSH_PASSPHRASE
-host -f # DEFAULT_HOST
+host -f # HOST
 
 cp docker-compose.yml.example my-buildtree.yml
 cp .env-compose.example .env-compose
 
-# If using boot2docker set DEFAULT_HOST to the hostname of your VM
+# If using boot2docker set HOST to the hostname of your VM
 docker-compose -f my-buildtree.yml up -d db
 docker-compose -f my-buildtree.yml run app bundle exec rake db:migrate
 docker-compose -f my-buildtree.yml up --no-recreate
@@ -93,7 +93,7 @@ docker-compose -f my-buildtree.yml up --no-recreate
   - [x] Dockerhub
   - [x] Docker Compose
     - [x] Fix Assets
-    - [ ] Default Host - Maybe we could make this get the FQDN on boot
+    - [x] Default Host - Maybe we could make this get the FQDN on boot
   - [x] Docker Compose Example
   - [ ] Terraform
 - [ ] Tag
