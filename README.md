@@ -112,7 +112,7 @@ Requires >= git 2.3
 - [x] After Success and Parallel Builds
 - [ ] Installation documentation
   - [x] Dockerize
-  - [ ] Dockerhub
+  - [x] Dockerhub
   - [x] Docker Compose
     - [x] Fix Assets
     - [ ] Default Host - Maybe we could make this get the FQDN on boot
