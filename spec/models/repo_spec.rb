@@ -83,34 +83,54 @@ describe Repo do
     end
   end
 
-  describe "#repo_url" do
+  describe "#external_url" do
     let(:sha) { "a"*40 }
     let(:file) { "foo/bar/buzz.rb" }
 
-    context "github" do
+    shared_examples "github" do
       let(:repo) { FactoryGirl.build(:repo, service: 'github') }
 
       it "returns the correct url" do
-        expect(repo.external_url).to eq('https://github.com/bar/buzz')
+        expect(repo.external_url).to eq("https://#{host}/bar/buzz")
       end
 
       it "takes an optional sha arg" do
         expect(repo.external_url(sha)).to eq(
-          "https://github.com/bar/buzz/tree/#{sha}"
+          "https://#{host}/bar/buzz/tree/#{sha}"
         )
       end
 
       it "takes an optional file arg" do
         expect(repo.external_url(sha, file)).to eq(
-          "https://github.com/bar/buzz/blob/#{sha}/#{file}"
+          "https://#{host}/bar/buzz/blob/#{sha}/#{file}"
         )
       end
 
       it "takes an optional line number arg" do
         expect(repo.external_url(sha, file, 1)).to eq(
-          "https://github.com/bar/buzz/blob/#{sha}/#{file}#L1"
+          "https://#{host}/bar/buzz/blob/#{sha}/#{file}#L1"
         )
       end
+    end
+
+    context "github" do
+      let(:host) { "github.com" }
+
+      before(:each) do
+        ENV["GHE_HOST"] = nil
+      end
+
+      it_behaves_like "github"
+    end
+
+    context "github enterprise" do
+      let(:host) { "enterprise.github.com" }
+
+      before(:each) do
+        ENV["GHE_HOST"] = host
+      end
+
+      it_behaves_like "github"
     end
   end
 
@@ -153,8 +173,18 @@ describe Repo do
   describe "#git_url" do
     context "github" do
       it "returns the git ssh url" do
+        ENV["GHE_HOST"] = nil
         repo = FactoryGirl.build(:repo)
         expect(repo.git_url).to eq('git@github.com:bar/buzz.git')
+      end
+    end
+
+    context "github enterprise" do
+      it "returns the git ssh url" do
+        host = "enterprise.github.com"
+        ENV["GHE_HOST"] = host
+        repo = FactoryGirl.build(:repo)
+        expect(repo.git_url).to eq("git@#{host}:bar/buzz.git")
       end
     end
   end

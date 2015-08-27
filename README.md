@@ -24,8 +24,14 @@ your Homepage and Callback URL.
 ### Local Dev Machine Setup
 
 ```
-# Update .env with GITHUB_KEY and GITHUB_SECRET
+# Update .env with GITHUB_KEY, GITHUB_SECRET, and (optionally) GHE_HOST
 cp .env.example .env
+
+# If you are using GHE 2.2.x and want access to Repositories owned by your
+# Organizations/Teams, you'll need to uncomment the line in
+# config/initializers/octokit.rb that reads:
+# c.default_media_type = "application/vnd.github.moondragon+json"
+
 # Start Postgres
 # Create a buildtree user with permissions
 createuser --createdb buildtree
@@ -101,7 +107,7 @@ docker-compose -f my-buildtree.yml up --no-recreate
 
 #### TODOs for future releases
 - [ ] Synchronous Builds
-- [ ] Github Enterprise Support
+- [x] Github Enterprise Support
 - [ ] Don't require permissions on a public repo
 - [ ] Create a repo if it doesn't exist but is specified
 - [ ] Refactor BuildJob into easier to test modules

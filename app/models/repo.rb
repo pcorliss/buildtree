@@ -67,7 +67,7 @@ class Repo < ActiveRecord::Base
   end
 
   def github_external_url(sha = nil, file = nil, line = nil)
-    external = "https://github.com/#{organization}/#{name}"
+    external = "https://#{github_host}/#{organization}/#{name}"
     if file.present?
       external << "/blob/#{sha}"
       external << "/#{file}"
@@ -79,6 +79,10 @@ class Repo < ActiveRecord::Base
   end
 
   def github_git_url
-    "git@github.com:#{self.organization}/#{self.name}.git"
+    "git@#{github_host}:#{self.organization}/#{self.name}.git"
+  end
+
+  def github_host
+    ENV["GHE_HOST"] || "github.com"
   end
 end

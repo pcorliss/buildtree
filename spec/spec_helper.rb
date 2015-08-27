@@ -51,6 +51,7 @@ RSpec.configure do |config|
     # 4096 bits in prod is a little sluggish
     ENV['SSH_KEY_SIZE'] = '256'
     ENV['SSH_PASSPHRASE'] = 'hello world'
+    ENV['GHE_HOST'] = nil
   end
 
 # The settings below are suggested to provide a good initial experience
