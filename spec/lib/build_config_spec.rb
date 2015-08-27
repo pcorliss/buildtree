@@ -86,12 +86,39 @@ describe BuildConfig do
   end
 
   describe "#docker_image" do
-    it "returns docker image specified" do
-      expect(build_config.docker_image).to eq('ubuntu:15.10')
+    context "docker image config" do
+      it "returns docker image specified" do
+        expect(build_config.docker_image).to eq('ubuntu:15.10')
+      end
+
+      it "uses the default docker image if not specified" do
+        expect(empty_build_config.docker_image).to eq('ubuntu:14.04')
+      end
     end
 
-    it "uses the default docker image if not specified" do
-      expect(empty_build_config.docker_image).to eq('ubuntu:14.04')
+    context "docker compose config" do
+      let(:build_config_fixture) { File.read('spec/fixtures/docker_compose_build_config.yml') }
+
+      it "returns nil" do
+        expect(build_config.docker_image).to be_nil
+      end
+    end
+  end
+
+  describe "#docker_compose" do
+    context "docker image config" do
+      it "returns docker compose configuration settings" do
+        expect(build_config.docker_compose).to be_nil
+      end
+    end
+
+    context "docker compose config" do
+      let(:build_config_fixture) { File.read('spec/fixtures/docker_compose_build_config.yml') }
+
+      it "returns docker compose configuration settings" do
+        expect(build_config.docker_compose['config']).to eq('docker-compose-ci.yml')
+        expect(build_config.docker_compose['app_container_name']).to eq('web')
+      end
     end
   end
 

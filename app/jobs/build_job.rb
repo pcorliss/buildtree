@@ -137,8 +137,30 @@ class BuildJob
   end
 
   def run_docker_container(dir)
-    system_cmd("docker run --rm -i --privileged -v #{dir}:/var/ci #{build_config(dir).docker_image} /var/ci/bt.sh")
+    if build_config(dir).docker_compose
+      compose_yml_path = write_compose_ci_config(dir)
+      system_cmd("docker-compose -f #{compose_yml_path} run --rm #{build_config(dir).docker_compose['app_container_name']}")
+    else
+      system_cmd("docker run --rm -i --privileged -v #{dir}:/var/ci #{build_config(dir).docker_image} /var/ci/bt.sh")
+    end
   end
+
+  def write_compose_ci_config(dir)
+    compose_yml_path = "#{dir}/source/#{build_config(dir).docker_compose['config']}"
+    compose_yml = YAML.load_file(compose_yml_path)
+
+    app_container_name = build_config(dir).docker_compose['app_container_name']
+    compose_yml[app_container_name]['volumes'] = compose_yml[app_container_name].fetch("volumes", []) << "#{dir}:/var/ci"
+    compose_yml[app_container_name]['command'] = "/var/ci/bt.sh"
+
+    modified_compose_yml_path = "#{compose_yml_path}.ci"
+    File.open(modified_compose_yml_path, 'w') do |ci|
+      ci.write compose_yml.to_yaml
+    end
+
+    modified_compose_yml_path
+  end
+
 
   # IO Select usage cargo culted from https://gist.github.com/chrisn/7450808
   def system_cmd(cmd)

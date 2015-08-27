@@ -1,0 +1,16 @@
+docker_compose:
+  config: 'docker-compose-ci.yml'
+  app_container_name: web
+test:
+- rake
+- "mvn test"
+deploy:
+  some_deployment_target:
+    branch: master
+    cmds:
+      - asdf
+      - bar
+  some_other_target:
+    branch: release
+    cmds:
+      - fubar

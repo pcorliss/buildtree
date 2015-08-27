@@ -138,6 +138,53 @@ describe BuildJob do
       expect(build.new_record?).to be_falsey
     end
 
+    context "docker compose configuration" do
+      let(:build_config_fixture) { File.read('spec/fixtures/docker_compose_build_config.yml') }
+      let(:expected_compose_yml_path) { "#{tmpdir}/source/docker-compose-ci.yml" }
+      let(:modified_compose_yml_path) { "#{expected_compose_yml_path}.ci" }
+      let(:app_compose_yml_fixture) { YAML.load_file(app_compose_yml_path) }
+
+      before do
+        allow(YAML).to receive(:load_file).with(expected_compose_yml_path).and_return(app_compose_yml_fixture)
+        expect(build_job).to receive(:system_cmd).with(/git clone /) do
+          Dir.mkdir "#{tmpdir}/source"
+          mock_process
+        end
+      end
+
+      shared_examples "docker compose" do
+        it "creates a compose_ci.yml to execute the CI instructions" do
+          build_job.perform
+
+          expect(File.exists?(modified_compose_yml_path)).to be_truthy
+
+          allow(YAML).to receive(:load_file).with(modified_compose_yml_path).and_call_original
+          compose_yaml = YAML.load_file(modified_compose_yml_path)
+
+          expect(compose_yaml["web"]["volumes"]).to include("#{tmpdir}:/var/ci")
+          expect(compose_yaml["web"]["command"]).to eq "/var/ci/bt.sh"
+        end
+
+        it "runs docker containers" do
+          expected_docker_cmd = "docker-compose -f #{modified_compose_yml_path} run --rm web"
+          expect(build_job).to receive(:system_cmd).with(expected_docker_cmd)
+          build_job.perform
+        end
+      end
+
+      context "volumes specified" do
+        let(:app_compose_yml_path) { "spec/fixtures/docker_compose_app_config.yml" }
+
+        it_behaves_like "docker compose"
+      end
+
+      context "no volumes/command specified" do
+        let(:app_compose_yml_path) { "spec/fixtures/docker_compose_app_config_no_volumes.yml" }
+
+        it_behaves_like "docker compose"
+      end
+    end
+
     context "dependent builds" do
       before do
         allow(Delayed::Job).to receive(:enqueue)

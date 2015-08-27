@@ -11,7 +11,12 @@ class BuildConfig
   end
 
   def docker_image
-    @config['docker_image'] || DEFAULT_DOCKER_IMAGE
+    default_image = docker_compose.nil? ? DEFAULT_DOCKER_IMAGE : nil
+    @config['docker_image'] || default_image
+  end
+
+  def docker_compose
+    @config['docker_compose']
   end
 
   def header
