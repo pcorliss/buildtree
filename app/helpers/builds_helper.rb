@@ -4,15 +4,25 @@ module BuildsHelper
   def build_status(status)
     case status
     when 'pending'
-      fa_icon "cog spin fw"
+      link_to '#', data: {toggle: 'tooltip', 'original-title': 'in progress', placement: 'right'} do
+        fa_icon "cog spin fw"
+      end
     when 'queued'
-      fa_icon "clock-o fw"
+      link_to '#', data: {toggle: 'tooltip', 'original-title': 'queued', placement: 'right'} do
+        fa_icon "clock-o fw"
+      end
     when 'success'
-      fa_icon "check fw", class: 'text-success'
+      link_to '#', data: {toggle: 'tooltip', 'original-title': 'success', placement: 'right'} do
+        fa_icon "check fw", class: 'text-success'
+      end
     when 'failure'
-      fa_icon "times fw", class: 'text-danger'
+      link_to '#', data: {toggle: 'tooltip', 'original-title': 'failure', placement: 'right'} do
+        fa_icon "times fw", class: 'text-danger'
+      end
     else
-      fa_icon "exclamation-triangle fw", class: 'text-danger'
+      link_to '#', data: {toggle: 'tooltip', 'original-title': 'error', placement: 'right'} do
+        fa_icon "exclamation-triangle fw", class: 'text-danger'
+      end
     end
   end
 end
