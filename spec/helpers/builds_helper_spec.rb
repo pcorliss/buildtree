@@ -30,4 +30,23 @@ describe BuildsHelper do
       expect(build_status('asdf')).to include('text-danger')
     end
   end
+
+  describe "#build_duration" do
+    it "returns N/A if the build hasn't started" do
+      expect(build_duration(nil, nil)).to eq "N/A"
+    end
+
+    it "returns the passed duration if the build hasn't completed" do
+      expect(build_duration(10.minutes.ago, nil)).to eq "10 minutes"
+    end
+
+    it "includes seconds" do
+      expect(build_duration(18.seconds.ago, nil)).to eq "less than 20 seconds"
+    end
+
+    it "returns the duration once the build has completed" do
+      start_time = 2.days.ago
+      expect(build_duration(start_time, start_time + 50.minutes)).to eq "about 1 hour"
+    end
+  end
 end

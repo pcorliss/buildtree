@@ -22,7 +22,7 @@
 
     -if @build.started_at
       %dt Overall Duration
-      %dd= distance_of_time_in_words(@build.started_at, @build.overall_completed_at || Time.now, include_seconds: true)
+      %dd= build_duration(@build.started_at, @build.overall_completed_at)
 
     %dt Build Status
     %dd= build_status(@build.status)
@@ -35,8 +35,7 @@
 
     -if @build.started_at
       %dt Duration
-      %dd= distance_of_time_in_words(@build.started_at, @build.completed_at || Time.now, include_seconds: true)
-
+      %dd= build_duration(@build.started_at, @build.completed_at)
 
     %dt Git
     %dd= link_to @repo.external_url, @repo.external_url

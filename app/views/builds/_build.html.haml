@@ -6,4 +6,5 @@
   %td= link_to build.branch, path
   %td= link_to build.short_sha, path
   %td= link_to build.created_at, path
+  %td= build_duration(build.started_at, build.completed_at)
   %td= link_to build_status(build.status), path

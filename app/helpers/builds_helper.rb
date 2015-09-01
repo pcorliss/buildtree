@@ -25,4 +25,9 @@ module BuildsHelper
       end
     end
   end
+
+  def build_duration(started_at, completed_at)
+    return "N/A" unless started_at
+    distance_of_time_in_words(started_at, completed_at || Time.now, include_seconds: true)
+  end
 end
