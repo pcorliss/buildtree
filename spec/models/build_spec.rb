@@ -95,6 +95,85 @@ describe Build do
     end
   end
 
+  describe "#overall_completed_at" do
+    let(:start_time) { Time.now }
+    let(:root_build) do
+      FactoryGirl.build(
+        :build,
+        repo: nil,
+        started_at: start_time,
+        completed_at: start_time + 10.minutes,
+      )
+    end
+    let(:child_completed_build) do
+      FactoryGirl.build(
+        :build,
+        repo: nil,
+        started_at: start_time + 11.minutes,
+        completed_at: start_time + 20.minutes,
+      )
+    end
+    let(:child_running_build) do
+      FactoryGirl.build(
+        :build,
+        repo: nil,
+        started_at: start_time + 21.minutes,
+        completed_at: nil,
+      )
+    end
+
+    it "returns the build's completed_at if it has no children" do
+      expect(root_build.children).to be_empty
+      expect(root_build.overall_completed_at).to eq start_time + 10.minutes
+    end
+
+    it "returns nil if the build hasn't completed" do
+      expect(child_running_build.overall_completed_at).to be_nil
+    end
+
+    it "returns the time spent processing this build and all child builds" do
+      root_build.children << child_completed_build
+
+      expect(root_build.overall_completed_at).to eq start_time + 20.minutes
+    end
+
+    it "returns nil if not all child builds have finished" do
+      root_build.children << child_completed_build
+      child_completed_build.children << child_running_build
+
+      expect(root_build.overall_completed_at).to be_nil
+    end
+  end
+
+  describe "#children_completed_at" do
+    let(:start_time) { Time.now }
+    let(:completed_build) do
+      FactoryGirl.build(
+        :build,
+        repo: nil,
+        started_at: start_time,
+        completed_at: start_time + 10.minutes,
+      )
+    end
+    let(:running_build) do
+      FactoryGirl.build(
+        :build,
+        repo: nil,
+        started_at: start_time + 11.minutes,
+        completed_at: nil,
+      )
+    end
+
+    it "returns an empty array if the build has no children" do
+      expect(build.children_completed_at).to eq []
+    end
+
+    it "returns a map of all immediate child overall completed_ats" do
+      build.children = [completed_build, running_build]
+      expect(build.children_completed_at).to match_array([start_time + 10.minutes, nil])
+    end
+  end
+
   describe "#self.new_from_config" do
     let(:repo) { FactoryGirl.build(:repo) }
     let(:top_parent) { FactoryGirl.build(:build, repo: repo) }

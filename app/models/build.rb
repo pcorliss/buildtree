@@ -32,6 +32,16 @@ class Build < ActiveRecord::Base
     end
   end
 
+  def overall_completed_at
+    completed_ats = children_completed_at << self.completed_at
+    return nil if completed_ats.any? { |c| c.nil? }
+    completed_ats.max
+  end
+
+  def children_completed_at
+    self.children.map(&:overall_completed_at)
+  end
+
   def self.new_from_config(config, parent)
     repo = config.repo ? Repo.find_by(config.repo) : parent.repo
     return nil unless repo

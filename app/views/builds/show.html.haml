@@ -20,6 +20,10 @@
     %dd
       = build_status(@build.overall_status)
 
+    -if @build.started_at
+      %dt Overall Duration
+      %dd= distance_of_time_in_words(@build.started_at, @build.overall_completed_at || Time.now, include_seconds: true)
+
     %dt Build Status
     %dd= build_status(@build.status)
 
