@@ -127,6 +127,24 @@ describe BuildJob do
       expect(build.success?).to be_truthy
     end
 
+    it "sets the started_at to the time the build starts" do
+      start_time = Time.utc(2015, 9, 1, 17, 57, 29)
+      allow(Time).to receive(:now).and_return(start_time)
+
+      build_job.perform
+
+      expect(build.started_at).to eq start_time
+    end
+
+    it "sets the completed_at to the time the build completes" do
+      completed_time = Time.utc(2015, 9, 1, 18, 57, 29)
+      allow(Time).to receive(:now).and_return(completed_time)
+
+      build_job.perform
+
+      expect(build.completed_at).to eq completed_time
+    end
+
     it "uses the exit code of the docker container to set a failing repo status" do
       allow(build_job).to receive(:system_cmd).and_return(fail_process)
       build_job.perform

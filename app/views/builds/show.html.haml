@@ -23,6 +23,17 @@
     %dt Build Status
     %dd= build_status(@build.status)
 
+    %dt Started
+    %dd= @build.started_at || "N/A"
+
+    %dt Completed
+    %dd= @build.completed_at || "N/A"
+
+    -if @build.started_at
+      %dt Duration
+      %dd= distance_of_time_in_words(@build.started_at, @build.completed_at || Time.now, include_seconds: true)
+
+
     %dt Git
     %dd= link_to @repo.external_url, @repo.external_url
 
