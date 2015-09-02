@@ -17,7 +17,6 @@ class BuildJob
   def perform
     set_sha if @build.sha.nil?
     set_status(:pending)
-    set_started_at
     tmpdir do |dir|
       write_private_key(dir)
       return short_circuit! if short_circuit?(git_clone(dir))
@@ -26,7 +25,6 @@ class BuildJob
       build_config(dir).write("#{dir}/bt.sh")
       return short_circuit! if short_circuit?(run_docker_container(dir))
       set_status(:success)
-      set_completed_at
       start_dependent_builds(build_config(dir))
     end
   rescue => e
@@ -67,7 +65,15 @@ class BuildJob
 
   def set_status(status)
     @build.status = status
+
+    if status == :pending
+      @build.started_at = Time.now
+    else
+      @build.completed_at = Time.now
+    end
+
     @build.save
+
     begin
       @auth_user = GitApi.with_authorized_users(authorized_users) do |api|
         api.set_status(
@@ -82,16 +88,6 @@ class BuildJob
     rescue Octokit::ClientError => e
       Rails.logger.error e.exception.inspect
     end
-  end
-
-  def set_started_at
-    @build.started_at = Time.now
-    @build.save
-  end
-
-  def set_completed_at
-    @build.completed_at = Time.now
-    @build.save
   end
 
   def build_url
