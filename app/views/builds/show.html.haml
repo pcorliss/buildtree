@@ -20,9 +20,8 @@
     %dd
       = build_status(@build.overall_status)
 
-    -if @build.started_at
-      %dt Overall Duration
-      %dd= build_duration(@build.started_at, @build.overall_completed_at)
+    %dt Overall Duration
+    %dd= build_duration(@build.started_at, @build.overall_completed_at)
 
     %dt Build Status
     %dd= build_status(@build.status)
@@ -33,9 +32,8 @@
     %dt Completed
     %dd= @build.completed_at || "N/A"
 
-    -if @build.started_at
-      %dt Duration
-      %dd= build_duration(@build.started_at, @build.completed_at)
+    %dt Duration
+    %dd= build_duration(@build.started_at, @build.completed_at)
 
     %dt Git
     %dd= link_to @repo.external_url, @repo.external_url

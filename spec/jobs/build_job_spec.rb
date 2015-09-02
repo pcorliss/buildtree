@@ -145,6 +145,27 @@ describe BuildJob do
       expect(build.completed_at).to eq completed_time
     end
 
+    it "sets the completed_at if an error occurs" do
+      completed_time = Time.utc(2015, 9, 1, 18, 57, 29)
+      allow(Time).to receive(:now).and_return(completed_time)
+      allow(build_job).to receive(:write_private_key).and_raise(StandardError)
+
+      build_job.perform
+
+      expect(build.completed_at).to eq completed_time
+    end
+
+    it "sets the completed_at if we fail the build" do
+      completed_time = Time.utc(2015, 9, 1, 18, 57, 29)
+      allow(Time).to receive(:now).and_return(completed_time)
+      expected_git_clone_cmd = "git clone git@github.com:pcorliss/design_patterns.git --branch master --single-branch --depth 10 #{tmpdir}/source"
+      expect(build_job).to receive(:system_cmd).with(expected_git_clone_cmd).and_return(fail_process)
+
+      build_job.perform
+
+      expect(build.completed_at).to eq completed_time
+    end
+
     it "uses the exit code of the docker container to set a failing repo status" do
       allow(build_job).to receive(:system_cmd).and_return(fail_process)
       build_job.perform
