@@ -7,7 +7,7 @@ gem 'coffee-rails', '~> 4.1.0'
 gem 'jquery-rails'
 gem 'jbuilder', '~> 2.0'
 
-gem 'omniauth', '~> 1.2.1'
+gem 'omniauth', '~> 1.3.1'
 gem 'omniauth-oauth2', '~> 1.1.2'
 gem 'omniauth-github', '~> 1.1.2'
 gem 'octokit', '~> 4.0.1'
